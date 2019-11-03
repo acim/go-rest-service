@@ -50,11 +50,12 @@ func main() {
 		}
 	}()
 
+	srv := http.Server{Addr: ":" + strconv.Itoa(c.ServerPort), Handler: chi.ServerBaseContext(baseCtx, r)}
+
 	go shutdown(&srv, v, logger)
 
 	logger.Info("server", zap.String("name", c.ServiceName), zap.Int("port", c.ServerPort))
 
-	srv := http.Server{Addr: ":" + strconv.Itoa(c.ServerPort), Handler: chi.ServerBaseContext(baseCtx, r)}
 	if err := srv.ListenAndServe(); err != nil {
 		logger.Error("server", zap.Error(err))
 	}
