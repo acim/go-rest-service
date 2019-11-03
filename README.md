@@ -1,19 +1,21 @@
-# Custom Golang middleware collection
+# Skeleton for REST service including RenderJSON, ZapLogger and PromMetrics middlewares
 
-* JSONResponse - simplifies implementation of JSON REST API's
+## Included middlewares:
+
+* RenderJSON - simplifies implementation of JSON REST API's
 * ZapLogger - [chi](https://github.com/go-chi/chi) middleware for logging using [zap](https://github.com/uber-go/zap) logger
-* PromMetrics - [chi](https://github.com/go-chi/chi) middleware providing [Prometheus](https://prometheus.io/) metrics endpoint
-  and tracking total number of requests and requests duration partitioned by status code, method and request URI
+* PromMetrics - [chi](https://github.com/go-chi/chi) middleware providing [Prometheus](https://prometheus.io/) metrics to your HTTP server
+  Tracks total number of requests and requests duration partitioned by status code, method and request URI
 
-## JSONResponse handler example
+## RenderJSON handler example
 
 ```go
 import (
-    "github.com/acim/abmw"
+    "github.com/acim/pkg/middleware"
 )
 
 func ExampleHandler(w http.ResponseWriter, r *http.Request) {
-    res := abmw.ResponseFromContext(r.Context())
+    res := middleware.ResponseFromContext(r.Context())
     payload := &struct{
         foo string
         bar string
