@@ -1,6 +1,7 @@
 # Skeleton for REST service including RenderJSON, ZapLogger and PromMetrics middlewares
 
 [![Build Status](https://drone.ablab.de/api/badges/acim/go-rest-service/status.svg)](https://drone.ablab.de/acim/go-rest-service)
+[![Quality Gate Status](https://sonarqube.ablab.de/api/project_badges/measure?project=acim%3Ago-rest-service&metric=alert_status)](https://sonarqube.ablab.de/dashboard?id=acim%3Ago-rest-service)
 
 ## Included middlewares
 
