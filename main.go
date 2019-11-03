@@ -28,13 +28,13 @@ type config struct {
 
 func main() {
 	c := &config{}
-	err := envconfig.Process("", c)
-	if err != nil {
+	if err := envconfig.Process("", c); err != nil {
 		log.Fatalf("failed parsing environment variables: %v", err)
 	}
 
 	v := valve.New()
 	baseCtx := v.Context()
+
 	logger, err := logger(c)
 	if err != nil {
 		log.Fatalf("failed initializing logger: %v", err)
@@ -42,18 +42,20 @@ func main() {
 
 	r := router(c, logger)
 
-	go func(ctx context.Context) {
+	go func() {
 		addr := ":" + strconv.Itoa(c.MetricsPort)
 		srv := http.Server{Addr: addr, Handler: promhttp.Handler()}
 		logger.Info("metrics server", zap.String("name", c.ServiceName), zap.Int("port", c.MetricsPort))
 		if err := srv.ListenAndServe(); err != nil {
 		logger.Error("metrics server", zap.Error(err))
 	}
-	}(baseCtx)
+	}()
 
 	addr := ":" + strconv.Itoa(c.ServerPort)
 	srv := http.Server{Addr: addr, Handler: chi.ServerBaseContext(baseCtx, r)}
+
 	go shutdown(&srv, v, logger)
+	
 	logger.Info("server", zap.String("name", c.ServiceName), zap.Int("port", c.ServerPort))
 	if err := srv.ListenAndServe(); err != nil {
 		logger.Error("server", zap.Error(err))
@@ -74,6 +76,7 @@ func logger(c *config) (*zap.Logger, error) {
 	default:
 		return nil, fmt.Errorf("logger: unknown environment: '%s'", c.Environment)
 	}
+
 	if err != nil {
 		return nil, fmt.Errorf("logger: %w", err)
 	}
