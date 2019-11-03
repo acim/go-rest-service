@@ -63,6 +63,7 @@ func main() {
 
 func logger(c *config) (*zap.Logger, error) {
 	var logger *zap.Logger
+
 	var err error
 
 	switch c.Environment {
@@ -130,11 +131,15 @@ func shutdown(srv *http.Server, v *valve.Valve, logger *zap.Logger) {
 	<-ch
 	logger.Info("shutdown activated")
 
-	v.Shutdown(20 * time.Second)
+	if err := v.Shutdown(20 * time.Second); err != nil {
+		logger.Error("shutdown", zap.Error(err))
+	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
-	srv.Shutdown(ctx)
+	if err := srv.Shutdown(ctx); err != nil {
+		logger.Error("shutdown", zap.Error(err))
+	}
 
 	select {
 	case <-time.After(21 * time.Second):
