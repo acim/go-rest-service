@@ -1,21 +1,17 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"os/signal"
-	"strconv"
 	"time"
 
 	abmiddleware "github.com/acim/go-rest-service/pkg/middleware"
+	"github.com/acim/go-rest-service/pkg/rest"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/valve"
 	"github.com/kelseyhightower/envconfig"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
 )
 
@@ -32,9 +28,6 @@ func main() {
 		log.Fatalf("failed parsing environment variables: %v", err)
 	}
 
-	v := valve.New()
-	baseCtx := v.Context()
-
 	logger, err := logger(c)
 	if err != nil {
 		log.Fatalf("failed initializing logger: %v", err)
@@ -42,23 +35,8 @@ func main() {
 
 	r := router(c, logger)
 
-	go func() {
-		srv := http.Server{Addr: ":" + strconv.Itoa(c.MetricsPort), Handler: promhttp.Handler()}
-		logger.Info("metrics server", zap.String("name", c.ServiceName), zap.Int("port", c.MetricsPort))
-		if err := srv.ListenAndServe(); err != nil {
-			logger.Error("metrics server", zap.Error(err))
-		}
-	}()
-
-	srv := http.Server{Addr: ":" + strconv.Itoa(c.ServerPort), Handler: chi.ServerBaseContext(baseCtx, r)}
-
-	go shutdown(&srv, v, logger)
-
-	logger.Info("server", zap.String("name", c.ServiceName), zap.Int("port", c.ServerPort))
-
-	if err := srv.ListenAndServe(); err != nil {
-		logger.Error("server", zap.Error(err))
-	}
+	srv := rest.NewServer(c.ServiceName, c.ServerPort, c.MetricsPort, r, logger)
+	srv.Run()
 }
 
 func logger(c *config) (*zap.Logger, error) {
@@ -122,29 +100,4 @@ func router(c *config, logger *zap.Logger) *chi.Mux {
 	})
 
 	return r
-}
-
-func shutdown(srv *http.Server, v *valve.Valve, logger *zap.Logger) {
-	ch := make(chan os.Signal, 1)
-	signal.Notify(ch, os.Interrupt)
-
-	<-ch
-	logger.Info("shutdown activated")
-
-	if err := v.Shutdown(20 * time.Second); err != nil {
-		logger.Error("shutdown", zap.Error(err))
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
-	defer cancel()
-
-	if err := srv.Shutdown(ctx); err != nil {
-		logger.Error("shutdown", zap.Error(err))
-	}
-
-	select {
-	case <-time.After(21 * time.Second):
-		logger.Info("some connections not finished")
-	case <-ctx.Done():
-	}
 }
