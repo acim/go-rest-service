@@ -1,6 +1,8 @@
 # Skeleton for REST service including RenderJSON, ZapLogger and PromMetrics middlewares
 
-## Included middlewares:
+[![Build Status](https://drone.ablab.de/api/badges/acim/go-rest-service/status.svg)](https://drone.ablab.de/acim/go-rest-service)
+
+## Included middlewares
 
 * RenderJSON - simplifies implementation of JSON REST API's
 * ZapLogger - [chi](https://github.com/go-chi/chi) middleware for logging using [zap](https://github.com/uber-go/zap) logger
