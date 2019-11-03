@@ -8,7 +8,9 @@ import (
 	"strconv"
 	"time"
 
+	abmiddleware "github.com/acim/go-rest-service/pkg/middleware"
 	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/valve"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
@@ -82,4 +84,17 @@ func (s *Server) shutdown() {
 		s.logger.Info("some connections not finished")
 	case <-ctx.Done():
 	}
+}
+
+// DefaultRouter creates chi mux with default middlewares.
+func DefaultRouter(serviceName string, logger *zap.Logger) *chi.Mux {
+	r := chi.NewRouter()
+	r.Use(middleware.RequestID)
+	r.Use(middleware.Heartbeat("/health"))
+	r.Use(abmiddleware.ZapLogger(logger))
+	r.Use(abmiddleware.PromMetrics(serviceName, nil))
+	r.Use(middleware.DefaultCompress)
+	r.Use(abmiddleware.RenderJSON)
+	r.Use(middleware.Recoverer)
+	return r
 }
