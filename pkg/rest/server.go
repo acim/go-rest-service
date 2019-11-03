@@ -16,47 +16,44 @@ import (
 	"go.uber.org/zap"
 )
 
-// Server ...
+// Server runs REST and metrics servers.
 type Server struct {
-	serviceName string
-	serverPort  string
-	metricsPort string
-	router      *chi.Mux
-	srv         *http.Server
-	valve       *valve.Valve
-	logger      *zap.Logger
+	serviceName   string
+	router        *chi.Mux
+	server        *http.Server
+	metricsServer *http.Server
+	valve         *valve.Valve
+	logger        *zap.Logger
 }
 
 // NewServer creates new server.
 func NewServer(serviceName string, serverPort, metricsPort int, router *chi.Mux, logger *zap.Logger) *Server {
 	s := &Server{
 		serviceName: serviceName,
-		serverPort:  ":" + strconv.Itoa(serverPort),
-		metricsPort: ":" + strconv.Itoa(metricsPort),
 		router:      router,
-		logger:      logger,
 		valve:       valve.New(),
+		logger:      logger,
 	}
+	s.server = &http.Server{Addr: ":" + strconv.Itoa(serverPort), Handler: chi.ServerBaseContext(s.valve.Context(), s.router)}
+	s.metricsServer = &http.Server{Addr: ":" + strconv.Itoa(metricsPort), Handler: promhttp.Handler()}
+
 	return s
 }
 
-// Run ...
+// Run starts REST and metrics servers.
 func (s *Server) Run() {
 	go func() {
-		srv := http.Server{Addr: s.metricsPort, Handler: promhttp.Handler()}
-		s.logger.Info("metrics server", zap.String("name", s.serviceName), zap.String("port", s.metricsPort))
-		if err := srv.ListenAndServe(); err != nil {
+		s.logger.Info("metrics server", zap.String("name", s.serviceName), zap.String("port", s.metricsServer.Addr))
+		if err := s.metricsServer.ListenAndServe(); err != nil {
 			s.logger.Error("metrics server", zap.Error(err))
 		}
 	}()
 
-	s.srv = &http.Server{Addr: s.serverPort, Handler: chi.ServerBaseContext(s.valve.Context(), s.router)}
-
 	go s.shutdown()
 
-	s.logger.Info("server", zap.String("name", s.serviceName), zap.String("port", s.serverPort))
+	s.logger.Info("rest server", zap.String("name", s.serviceName), zap.String("port", s.server.Addr))
 
-	if err := s.srv.ListenAndServe(); err != nil {
+	if err := s.server.ListenAndServe(); err != nil {
 		s.logger.Error("server", zap.Error(err))
 	}
 }
@@ -75,7 +72,7 @@ func (s *Server) shutdown() {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 
-	if err := s.srv.Shutdown(ctx); err != nil {
+	if err := s.server.Shutdown(ctx); err != nil {
 		s.logger.Error("shutdown", zap.Error(err))
 	}
 
@@ -96,5 +93,9 @@ func DefaultRouter(serviceName string, logger *zap.Logger) *chi.Mux {
 	r.Use(middleware.DefaultCompress)
 	r.Use(abmiddleware.RenderJSON)
 	r.Use(middleware.Recoverer)
+	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+	})
+
 	return r
 }

@@ -26,7 +26,7 @@ func main() {
 		log.Fatalf("failed parsing environment variables: %v", err)
 	}
 
-	logger, err := logger(c)
+	logger, err := logger(c.Environment)
 	if err != nil {
 		log.Fatalf("failed initializing logger: %v", err)
 	}
@@ -57,19 +57,15 @@ func main() {
 		res.SetPayload("all done")
 	})
 
-	router.NotFound(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusNotFound)
-	})
-
 	rest.NewServer(c.ServiceName, c.ServerPort, c.MetricsPort, router, logger).Run()
 }
 
-func logger(c *config) (*zap.Logger, error) {
+func logger(env string) (*zap.Logger, error) {
 	var logger *zap.Logger
 
 	var err error
 
-	switch c.Environment {
+	switch env {
 	case "prod":
 		config := zap.NewProductionConfig()
 		config.Level = zap.NewAtomicLevelAt(zap.WarnLevel)
@@ -77,7 +73,7 @@ func logger(c *config) (*zap.Logger, error) {
 	case "dev":
 		logger, err = zap.NewDevelopment()
 	default:
-		return nil, fmt.Errorf("logger: unknown environment: '%s'", c.Environment)
+		return nil, fmt.Errorf("logger: unknown environment: '%s'", env)
 	}
 
 	if err != nil {
