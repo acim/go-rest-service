@@ -46,7 +46,9 @@ func main() {
 		addr := ":" + strconv.Itoa(c.MetricsPort)
 		srv := http.Server{Addr: addr, Handler: promhttp.Handler()}
 		logger.Info("metrics server", zap.String("name", c.ServiceName), zap.Int("port", c.MetricsPort))
-		srv.ListenAndServe()
+		if err := srv.ListenAndServe(); err != nil {
+		logger.Error("metrics server", zap.Error(err))
+	}
 	}(baseCtx)
 
 	addr := ":" + strconv.Itoa(c.ServerPort)
@@ -93,7 +95,6 @@ func router(c *config, logger *zap.Logger) *chi.Mux {
 		res := abmiddleware.ResponseFromContext(r.Context())
 		res.SetPayload("hello world")
 	})
-
 	r.Get("/heavy", func(w http.ResponseWriter, r *http.Request) {
 
 		valve.Lever(r.Context()).Open()
@@ -135,6 +136,5 @@ func shutdown(srv *http.Server, v *valve.Valve, logger *zap.Logger) {
 	case <-time.After(21 * time.Second):
 		logger.Info("some connections not finished")
 	case <-ctx.Done():
-
 	}
 }
