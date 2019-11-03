@@ -40,7 +40,8 @@ func PromMetrics(serviceName string, buckets []float64) func(next http.Handler) 
 			ww := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
 			defer func() {
 				requests.WithLabelValues(http.StatusText(ww.Status()), r.Method, r.RequestURI).Inc()
-				duration.WithLabelValues(http.StatusText(ww.Status()), r.Method, r.RequestURI).Observe(float64(time.Since(start).Nanoseconds()) / 1000000)
+				duration.WithLabelValues(http.StatusText(ww.Status()), r.Method, r.RequestURI).
+					Observe(float64(time.Since(start).Nanoseconds()) / 1000000)
 			}()
 			next.ServeHTTP(ww, r)
 		})

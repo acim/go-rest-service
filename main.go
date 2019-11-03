@@ -137,6 +137,7 @@ func shutdown(srv *http.Server, v *valve.Valve, logger *zap.Logger) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
+
 	if err := srv.Shutdown(ctx); err != nil {
 		logger.Error("shutdown", zap.Error(err))
 	}

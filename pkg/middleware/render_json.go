@@ -82,7 +82,7 @@ func RenderJSON(next http.Handler) http.Handler {
 				ww.WriteHeader(resp.statusCode)
 			}
 
-			ww.Write(body)
+			_, _ = ww.Write(body)
 		}
 	})
 }
