@@ -6,15 +6,15 @@ import (
 	"net/http"
 	"time"
 
-	abmiddleware "github.com/acim/go-rest-service/pkg/middleware"
-	"github.com/acim/go-rest-service/pkg/rest"
+	abmiddleware "github.com/acim/go-rest-server/pkg/middleware"
+	"github.com/acim/go-rest-server/pkg/rest"
 	"github.com/go-chi/valve"
 	"github.com/kelseyhightower/envconfig"
 	"go.uber.org/zap"
 )
 
 type config struct {
-	ServiceName string `default:"rest-service"`
+	ServiceName string `default:"rest-server"`
 	ServerPort  int    `default:"3000"`
 	MetricsPort int    `default:"3001"`
 	Environment string `default:"dev"`

@@ -34,7 +34,7 @@ steps:
 - name: build
   image: ablab/drone-kaniko
   settings:
-    repo: ablab/rest-service
+    repo: ablab/go-rest-server
     username: acim
     password:
       from_secret: registry_password

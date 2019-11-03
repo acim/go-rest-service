@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	abmiddleware "github.com/acim/go-rest-service/pkg/middleware"
+	abmiddleware "github.com/acim/go-rest-server/pkg/middleware"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/valve"

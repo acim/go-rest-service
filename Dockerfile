@@ -10,9 +10,9 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflag
 
 FROM alpine
 
-LABEL org.label-schema.description="ablab.io rest-service" \
-    org.label-schema.name="res-service" \
-    org.label-schema.url="https://github.com/acim/go-rest-service/blob/master/README.md" \
+LABEL org.label-schema.description="ablab.io rest-server" \
+    org.label-schema.name="go-rest-server" \
+    org.label-schema.url="https://github.com/acim/go-rest-server/blob/master/README.md" \
     org.label-schema.vendor="ablab.io"
 
 RUN adduser -D ablab

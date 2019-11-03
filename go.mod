@@ -1,4 +1,4 @@
-module github.com/acim/go-rest-service
+module github.com/acim/go-rest-server
 
 go 1.13
 

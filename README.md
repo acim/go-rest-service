@@ -1,7 +1,7 @@
 # Skeleton for REST server with metrics endpoint
 
-[![Build Status](https://drone.ablab.de/api/badges/acim/go-rest-service/status.svg)](https://drone.ablab.de/acim/go-rest-service)
-[![Quality Gate Status](https://sonarqube.ablab.de/api/project_badges/measure?project=acim%3Ago-rest-service&metric=alert_status)](https://sonarqube.ablab.de/dashboard?id=acim%3Ago-rest-service)
+[![Build Status](https://drone.ablab.de/api/badges/acim/go-rest-server/status.svg)](https://drone.ablab.de/acim/go-rest-server)
+[![Quality Gate Status](https://sonarqube.ablab.de/api/project_badges/measure?project=acim%3Ago-rest-server&metric=alert_status)](https://sonarqube.ablab.de/dashboard?id=acim%3Ago-rest-server)
 
 ## Included middlewares
 
