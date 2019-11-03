@@ -43,20 +43,18 @@ func main() {
 	r := router(c, logger)
 
 	go func() {
-		addr := ":" + strconv.Itoa(c.MetricsPort)
-		srv := http.Server{Addr: addr, Handler: promhttp.Handler()}
+		srv := http.Server{Addr: ":" + strconv.Itoa(c.MetricsPort), Handler: promhttp.Handler()}
 		logger.Info("metrics server", zap.String("name", c.ServiceName), zap.Int("port", c.MetricsPort))
 		if err := srv.ListenAndServe(); err != nil {
-		logger.Error("metrics server", zap.Error(err))
-	}
+			logger.Error("metrics server", zap.Error(err))
+		}
 	}()
 
-	addr := ":" + strconv.Itoa(c.ServerPort)
-	srv := http.Server{Addr: addr, Handler: chi.ServerBaseContext(baseCtx, r)}
-
 	go shutdown(&srv, v, logger)
-	
+
 	logger.Info("server", zap.String("name", c.ServiceName), zap.Int("port", c.ServerPort))
+
+	srv := http.Server{Addr: ":" + strconv.Itoa(c.ServerPort), Handler: chi.ServerBaseContext(baseCtx, r)}
 	if err := srv.ListenAndServe(); err != nil {
 		logger.Error("server", zap.Error(err))
 	}
@@ -99,8 +97,10 @@ func router(c *config, logger *zap.Logger) *chi.Mux {
 		res.SetPayload("hello world")
 	})
 	r.Get("/heavy", func(w http.ResponseWriter, r *http.Request) {
-
-		valve.Lever(r.Context()).Open()
+		err := valve.Lever(r.Context()).Open()
+		if err != nil {
+			logger.Error("open valve lever", zap.Error(err))
+		}
 		defer valve.Lever(r.Context()).Close()
 
 		select {
