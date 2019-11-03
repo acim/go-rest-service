@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"time"
 
-	abmiddleware "github.com/acim/test/pkg/middleware"
+	abmiddleware "github.com/acim/go-rest-service/pkg/middleware"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/valve"
@@ -40,40 +40,7 @@ func main() {
 		log.Fatalf("failed initializing logger: %v", err)
 	}
 
-	r := chi.NewRouter()
-	r.Use(middleware.Recoverer)
-	r.Use(middleware.RequestID)
-	r.Use(middleware.Heartbeat("/health"))
-	r.Use(abmiddleware.ZapLogger(logger))
-	r.Use(abmiddleware.PromMetrics(c.ServiceName, nil))
-	r.Use(middleware.DefaultCompress)
-	r.Use(abmiddleware.RenderJSON)
-
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		res := abmiddleware.ResponseFromContext(r.Context())
-		res.SetPayload("hello world")
-	})
-
-	r.Get("/heavy", func(w http.ResponseWriter, r *http.Request) {
-
-		valve.Lever(r.Context()).Open()
-		defer valve.Lever(r.Context()).Close()
-
-		select {
-		case <-valve.Lever(r.Context()).Stop():
-			logger.Info("valve closed, finishing")
-		case <-time.After(2 * time.Second):
-			// Do some heave lifting
-			time.Sleep(2 * time.Second)
-		}
-
-		res := abmiddleware.ResponseFromContext(r.Context())
-		res.SetPayload("all done")
-	})
-
-	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusNotFound)
-	})
+	r := router(c, logger)
 
 	go func(ctx context.Context) {
 		addr := ":" + strconv.Itoa(c.MetricsPort)
@@ -110,6 +77,45 @@ func logger(c *config) (*zap.Logger, error) {
 	}
 
 	return logger, nil
+}
+
+func router(c *config, logger *zap.Logger) *chi.Mux {
+	r := chi.NewRouter()
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.RequestID)
+	r.Use(middleware.Heartbeat("/health"))
+	r.Use(abmiddleware.ZapLogger(logger))
+	r.Use(abmiddleware.PromMetrics(c.ServiceName, nil))
+	r.Use(middleware.DefaultCompress)
+	r.Use(abmiddleware.RenderJSON)
+
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		res := abmiddleware.ResponseFromContext(r.Context())
+		res.SetPayload("hello world")
+	})
+
+	r.Get("/heavy", func(w http.ResponseWriter, r *http.Request) {
+
+		valve.Lever(r.Context()).Open()
+		defer valve.Lever(r.Context()).Close()
+
+		select {
+		case <-valve.Lever(r.Context()).Stop():
+			logger.Info("valve closed, finishing")
+		case <-time.After(2 * time.Second):
+			// Do some heave lifting
+			time.Sleep(2 * time.Second)
+		}
+
+		res := abmiddleware.ResponseFromContext(r.Context())
+		res.SetPayload("all done")
+	})
+
+	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+	})
+
+	return r
 }
 
 func shutdown(srv *http.Server, v *valve.Valve, logger *zap.Logger) {
