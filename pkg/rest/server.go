@@ -34,7 +34,8 @@ func NewServer(serviceName string, serverPort, metricsPort int, router *chi.Mux,
 		valve:       valve.New(),
 		logger:      logger,
 	}
-	s.server = &http.Server{Addr: ":" + strconv.Itoa(serverPort), Handler: chi.ServerBaseContext(s.valve.Context(), s.router)}
+	s.server = &http.Server{Addr: ":" + strconv.Itoa(serverPort),
+		Handler: chi.ServerBaseContext(s.valve.Context(), s.router)}
 	s.metricsServer = &http.Server{Addr: ":" + strconv.Itoa(metricsPort), Handler: promhttp.Handler()}
 
 	return s
