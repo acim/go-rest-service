@@ -2,8 +2,20 @@
 version: "3.7"
 
 services:
+  postgres:
+    container_name: go-rest-server-postgres
+    image: postgres:alpine
+    restart: always
+    volumes:
+    - postgres:/var/lib/postgresql/data
+    - .docker:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_PASSWORD: secret
   service:
+    container_name: go-rest-server
     image: acim/go-reflex
+    depends_on:
+    - postgres
     environment:
       - RACE_DETECTOR=1
     volumes:
@@ -11,3 +23,5 @@ services:
     ports:
       - 3000:3000
       - 3001:3001
+volumes:
+  postgres:
