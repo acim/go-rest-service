@@ -4,7 +4,7 @@ version: "3.7"
 services:
   postgres:
     container_name: go-rest-server-postgres
-    image: postgres:alpine
+    image: postgres:11-alpine
     restart: always
     volumes:
     - postgres:/var/lib/postgresql/data
