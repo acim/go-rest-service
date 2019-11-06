@@ -12,4 +12,5 @@ require (
 	github.com/prometheus/client_golang v1.2.1
 	go.uber.org/zap v1.12.0
 	golang.org/x/crypto v0.0.0-20190510104115-cbcb75029529
+	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 )

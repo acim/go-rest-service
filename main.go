@@ -1,14 +1,14 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
+	"github.com/acim/go-rest-server/pkg/cmd"
 	abmiddleware "github.com/acim/go-rest-server/pkg/middleware"
-	"github.com/acim/go-rest-server/pkg/model"
 	"github.com/acim/go-rest-server/pkg/rest"
 	"github.com/acim/go-rest-server/pkg/store/pgstore"
 	"github.com/go-chi/valve"
@@ -16,6 +16,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type config struct {
@@ -35,25 +36,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed initializing logger: %v", err)
 	}
-
-	////////////////////
-	db, err := sqlx.Connect("postgres", "host=go-rest-server-postgres user=postgres password=secret dbname=postgres sslmode=disable")
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	users := pgstore.NewUsers(db, pgstore.UsersTableName("admin"))
-
-	user, err := model.NewUser("boban.acimovic@gmail.com", "secret")
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	err = users.Insert(context.TODO(), user)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	////////////////////
 
 	router := rest.DefaultRouter(c.ServiceName, logger)
 
@@ -81,7 +63,17 @@ func main() {
 		res.SetPayload("all done")
 	})
 
-	rest.NewServer(c.ServiceName, c.ServerPort, c.MetricsPort, router, logger).Run()
+	db, err := sqlx.Connect("postgres", "host=go-rest-server-postgres user=postgres password=secret dbname=postgres sslmode=disable")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	users := pgstore.NewUsers(db, pgstore.UsersTableName("admin"))
+
+	app := kingpin.New("super", "A command-line chat application.")
+	cmd.NewUserCmd(app, users)
+	cmd.NewServerCmd(app, rest.NewServer(c.ServiceName, c.ServerPort, c.MetricsPort, router, logger))
+	kingpin.MustParse(app.Parse(os.Args[1:]))
 }
 
 func logger(env string) (*zap.Logger, error) {
