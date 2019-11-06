@@ -18,6 +18,10 @@ services:
     - postgres
     environment:
       - RACE_DETECTOR=1
+      - DB_HOST=go-rest-server-postgres
+      - DB_USER=postgres
+      - DB_PASS=secret
+      - DB_NAME=postgres
     volumes:
       - .:/app
     ports:

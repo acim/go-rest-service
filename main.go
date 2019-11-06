@@ -24,6 +24,12 @@ type config struct {
 	ServerPort  int    `default:"3000"`
 	MetricsPort int    `default:"3001"`
 	Environment string `default:"dev"`
+	Database    struct {
+		Hostname string `envconfig:"DB_HOST"`
+		Username string `envconfig:"DB_USER"`
+		Password string `envconfig:"DB_PASS"`
+		Name     string `envconfig:"DB_NAME"`
+	}
 }
 
 func main() {
@@ -63,14 +69,16 @@ func main() {
 		res.SetPayload("all done")
 	})
 
-	db, err := sqlx.Connect("postgres", "host=go-rest-server-postgres user=postgres password=secret dbname=postgres sslmode=disable")
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
+		c.Database.Hostname, c.Database.Username, c.Database.Password, c.Database.Name)
+	db, err := sqlx.Connect("postgres", dsn)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	users := pgstore.NewUsers(db, pgstore.UsersTableName("admin"))
 
-	app := kingpin.New("super", "A command-line chat application.")
+	app := kingpin.New("go-rest-server", "REST API server")
 	cmd.NewUserCmd(app, users)
 	cmd.NewServerCmd(app, rest.NewServer(c.ServiceName, c.ServerPort, c.MetricsPort, router, logger))
 	kingpin.MustParse(app.Parse(os.Args[1:]))
