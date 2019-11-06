@@ -33,27 +33,33 @@ func (r *Response) SetStatusCode(statusCode int) *Response {
 // SetStatusBadRequest sets status code to http.StatusBadRequest.
 func (r *Response) SetStatusBadRequest(err string) *Response {
 	r.statusCode = http.StatusBadRequest
+
 	if err != "" {
 		r.AddError(err)
 	}
+
 	return r
 }
 
 // SetStatusForbidden sets status code to http.StatusForbidden.
 func (r *Response) SetStatusForbidden(err string) *Response {
 	r.statusCode = http.StatusForbidden
+
 	if err != "" {
 		r.AddError(err)
 	}
+
 	return r
 }
 
 // SetStatusInternalServerError sets status code to http.StatusInternalServerError.
 func (r *Response) SetStatusInternalServerError(err string) *Response {
 	r.statusCode = http.StatusInternalServerError
+
 	if err != "" {
 		r.AddError(err)
 	}
+
 	return r
 }
 
@@ -72,6 +78,7 @@ func (r *Response) SetHeaders(headers map[string]string) *Response {
 // SetPayload sets payload to response.
 func (r *Response) SetPayload(payload interface{}) *Response {
 	r.Payload = payload
+
 	return r
 }
 
