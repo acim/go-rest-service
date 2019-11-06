@@ -45,6 +45,7 @@ func (us *Users) Insert(ctx context.Context, u *model.User) error {
 	}
 
 	_, err = us.prepInsert.ExecContext(ctx, u)
+
 	return err
 }
 
