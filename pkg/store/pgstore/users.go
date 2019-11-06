@@ -3,6 +3,7 @@ package pgstore
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/acim/go-rest-server/pkg/model"
 	"github.com/acim/go-rest-server/pkg/store"
@@ -37,8 +38,9 @@ func (us *Users) Insert(ctx context.Context, u *model.User) error {
 	var err error
 
 	if us.prepInsert == nil {
-		us.prepInsert, err = us.db.PrepareNamedContext(ctx,
-			fmt.Sprintf("INSERT INTO %s (id, email, password) VALUES (:id, :email, :password)", us.tableName))
+		sql := "INSERT INTO table (id, email, password) VALUES (:id, :email, :password)"
+		sql = strings.Replace(sql, "table", us.tableName, 1)
+		us.prepInsert, err = us.db.PrepareNamedContext(ctx, sql)
 		if err != nil {
 			return fmt.Errorf("prepare: %w", err)
 		}

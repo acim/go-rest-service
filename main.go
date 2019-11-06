@@ -71,6 +71,7 @@ func main() {
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
 		c.Database.Hostname, c.Database.Username, c.Database.Password, c.Database.Name)
+
 	db, err := sqlx.Connect("postgres", dsn)
 	if err != nil {
 		log.Fatalln(err)
