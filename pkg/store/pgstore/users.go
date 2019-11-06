@@ -40,6 +40,7 @@ func (us *Users) Insert(ctx context.Context, u *model.User) error {
 	if us.prepInsert == nil {
 		sql := "INSERT INTO table (id, email, password) VALUES (:id, :email, :password)"
 		sql = strings.Replace(sql, "table", us.tableName, 1)
+
 		us.prepInsert, err = us.db.PrepareNamedContext(ctx, sql)
 		if err != nil {
 			return fmt.Errorf("prepare: %w", err)
