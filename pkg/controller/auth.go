@@ -28,7 +28,7 @@ func NewAuth(users store.Users, jwtauth *jwtauth.JWTAuth, logger *zap.Logger, op
 		users:                  users,
 		jwtauth:                jwtauth,
 		authTokenExpiration:    15 * time.Minute,
-		refreshTokenExpiration: 3 * 24 * time.Hour,
+		refreshTokenExpiration: 7 * 24 * time.Hour,
 		logger:                 logger,
 	}
 
@@ -47,7 +47,7 @@ func (c *Auth) Login(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(l)
 	if err != nil {
-		c.logger.Warn("controller login", zap.NamedError("json decode", err))
+		c.logger.Warn("login", zap.NamedError("json decode", err))
 		res.SetStatusBadRequest(errParsingRequestBody)
 
 		return
@@ -55,7 +55,7 @@ func (c *Auth) Login(w http.ResponseWriter, r *http.Request) {
 
 	u, err := c.users.FindByEmail(r.Context(), l.Email)
 	if err != nil {
-		c.logger.Warn("controller login", zap.NamedError("find by email", err))
+		c.logger.Warn("login", zap.NamedError("find by email", err))
 		res.SetStatusInternalServerError("")
 
 		return
@@ -68,7 +68,7 @@ func (c *Auth) Login(w http.ResponseWriter, r *http.Request) {
 
 	authToken, err := c.token(c.authTokenExpiration, middleware.GetReqID(r.Context()), u.ID)
 	if err != nil {
-		c.logger.Warn("controller login", zap.NamedError("auth token", err))
+		c.logger.Warn("login", zap.NamedError("auth token", err))
 		res.SetStatusInternalServerError("")
 
 		return
@@ -76,7 +76,7 @@ func (c *Auth) Login(w http.ResponseWriter, r *http.Request) {
 
 	refreshToken, err := c.token(c.refreshTokenExpiration, middleware.GetReqID(r.Context()), u.ID)
 	if err != nil {
-		c.logger.Warn("controller login", zap.NamedError("refresh token", err))
+		c.logger.Warn("login", zap.NamedError("refresh token", err))
 		res.SetStatusInternalServerError("")
 
 		return
@@ -105,6 +105,13 @@ type AuthOption func(*Auth)
 func AuthTokenExpiration(e time.Duration) AuthOption {
 	return func(c *Auth) {
 		c.authTokenExpiration = e
+	}
+}
+
+// RefreshTokenExpiration ...
+func RefreshTokenExpiration(e time.Duration) AuthOption {
+	return func(c *Auth) {
+		c.refreshTokenExpiration = e
 	}
 }
 

@@ -69,8 +69,8 @@ func (s *Users) FindByEmail(ctx context.Context, email string) (*model.User, err
 		}
 	}
 
-	var u *model.User
-	err = s.prepFindByEmail.QueryRowContext(ctx, email).Scan(u)
+	u := &model.User{}
+	err = s.prepFindByEmail.QueryRowxContext(ctx, map[string]interface{}{"email": email}).StructScan(u)
 
 	return u, err
 }

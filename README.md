@@ -28,3 +28,5 @@ func ExampleHandler(w http.ResponseWriter, r *http.Request) {
 ```
 
 That's all, your response will be encoded as application/json.
+
+## [JWT secret](https://www.grc.com/passwords.htm)

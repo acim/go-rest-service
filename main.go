@@ -3,15 +3,14 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"time"
 
 	"github.com/acim/go-rest-server/pkg/cmd"
-	abmiddleware "github.com/acim/go-rest-server/pkg/middleware"
+	"github.com/acim/go-rest-server/pkg/controller"
 	"github.com/acim/go-rest-server/pkg/rest"
 	"github.com/acim/go-rest-server/pkg/store/pgstore"
-	"github.com/go-chi/valve"
+	"github.com/go-chi/jwtauth"
 	"github.com/jmoiron/sqlx"
 	"github.com/kelseyhightower/envconfig"
 	_ "github.com/lib/pq"
@@ -24,11 +23,16 @@ type config struct {
 	ServerPort  int    `default:"3000"`
 	MetricsPort int    `default:"3001"`
 	Environment string `default:"dev"`
-	Database    struct {
-		Hostname string `envconfig:"DB_HOST"`
-		Username string `envconfig:"DB_USER"`
-		Password string `envconfig:"DB_PASS"`
-		Name     string `envconfig:"DB_NAME"`
+	JWT         struct {
+		Secret                 string        `required:"true"`
+		AuthTokenExpiration    time.Duration `envconfig:"JWT_AUTH_TOKEN_EXP" default:"15m"`
+		RefreshTokenExpiration time.Duration `envconfig:"JWT_REFRESH_TOKEN_EXP" default:"168h"`
+	}
+	Database struct {
+		Hostname string `envconfig:"DB_HOST" required:"true"`
+		Username string `envconfig:"DB_USER" required:"true"`
+		Password string `envconfig:"DB_PASS" required:"true"`
+		Name     string `envconfig:"DB_NAME" required:"true"`
 	}
 }
 
@@ -43,32 +47,6 @@ func main() {
 		log.Fatalf("failed initializing logger: %v", err)
 	}
 
-	router := rest.DefaultRouter(c.ServiceName, logger)
-
-	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		res := abmiddleware.ResponseFromContext(r.Context())
-		res.SetPayload("hello world")
-	})
-
-	router.Get("/heavy", func(w http.ResponseWriter, r *http.Request) {
-		err := valve.Lever(r.Context()).Open()
-		if err != nil {
-			logger.Error("open valve lever", zap.Error(err))
-		}
-		defer valve.Lever(r.Context()).Close()
-
-		select {
-		case <-valve.Lever(r.Context()).Stop():
-			logger.Info("valve closed, finishing")
-		case <-time.After(2 * time.Second):
-			// Do some heave lifting
-			time.Sleep(2 * time.Second)
-		}
-
-		res := abmiddleware.ResponseFromContext(r.Context())
-		res.SetPayload("all done")
-	})
-
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
 		c.Database.Hostname, c.Database.Username, c.Database.Password, c.Database.Name)
 
@@ -78,6 +56,33 @@ func main() {
 	}
 
 	users := pgstore.NewUsers(db, pgstore.UsersTableName("admin"))
+
+	jwtauth := jwtauth.New("HS256", []byte(c.JWT.Secret), nil)
+
+	authController := controller.NewAuth(users, jwtauth, logger)
+
+	router := rest.DefaultRouter(c.ServiceName, logger)
+
+	router.Post("/auth/login", authController.Login)
+
+	// router.Get("/heavy", func(w http.ResponseWriter, r *http.Request) {
+	// 	err := valve.Lever(r.Context()).Open()
+	// 	if err != nil {
+	// 		logger.Error("open valve lever", zap.Error(err))
+	// 	}
+	// 	defer valve.Lever(r.Context()).Close()
+
+	// 	select {
+	// 	case <-valve.Lever(r.Context()).Stop():
+	// 		logger.Info("valve closed, finishing")
+	// 	case <-time.After(2 * time.Second):
+	// 		// Do some heave lifting
+	// 		time.Sleep(2 * time.Second)
+	// 	}
+
+	// 	res := abmiddleware.ResponseFromContext(r.Context())
+	// 	res.SetPayload("all done")
+	// })
 
 	app := kingpin.New("go-rest-server", "REST API server")
 	cmd.NewUserCmd(app, users)
