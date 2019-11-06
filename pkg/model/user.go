@@ -41,6 +41,7 @@ func (u *User) IsValidPassword(plainPassword string) bool {
 	if u.Password == "" || plainPassword == "" {
 		return false
 	}
+
 	return bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(plainPassword)) == nil
 }
 
@@ -49,10 +50,13 @@ func (u *User) HashPassword() error {
 	if u.Password == "" {
 		return errors.New("hash password: empty password")
 	}
+
 	hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return fmt.Errorf("hash password: %w", err)
 	}
+
 	u.Password = string(hash)
+
 	return nil
 }

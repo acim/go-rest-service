@@ -24,15 +24,18 @@ func NewUsers(db *sqlx.DB, opts ...UsersOption) *Users {
 		db:        db,
 		tableName: "user",
 	}
+
 	for _, opt := range opts {
 		opt(u)
 	}
+
 	return u
 }
 
 // Insert implements store.Users interface.
 func (us *Users) Insert(ctx context.Context, u *model.User) error {
 	var err error
+
 	if us.prepInsert == nil {
 		us.prepInsert, err = us.db.PrepareNamedContext(ctx,
 			fmt.Sprintf("INSERT INTO %s (id, email, password) VALUES (:id, :email, :password)", us.tableName))
