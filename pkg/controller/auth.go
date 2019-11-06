@@ -92,7 +92,7 @@ func (c *Auth) token(expiration time.Duration, requestID, userID string) (string
 		Subject:   userID,
 	})
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	return token, nil
