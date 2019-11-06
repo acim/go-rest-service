@@ -49,6 +49,7 @@ func (c *Auth) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		c.logger.Warn("controller login", zap.NamedError("json decode", err))
 		res.SetStatusBadRequest(errParsingRequestBody)
+
 		return
 	}
 
@@ -56,6 +57,7 @@ func (c *Auth) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		c.logger.Warn("controller login", zap.NamedError("find by email", err))
 		res.SetStatusInternalServerError("")
+
 		return
 	}
 
@@ -64,25 +66,26 @@ func (c *Auth) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	authToken, err := c.token(r, c.authTokenExpiration, middleware.GetReqID(r.Context()), u.ID)
+	authToken, err := c.token(c.authTokenExpiration, middleware.GetReqID(r.Context()), u.ID)
 	if err != nil {
 		c.logger.Warn("controller login", zap.NamedError("auth token", err))
 		res.SetStatusInternalServerError("")
+
 		return
 	}
 
-	refreshToken, err := c.token(r, c.refreshTokenExpiration, middleware.GetReqID(r.Context()), u.ID)
+	refreshToken, err := c.token(c.refreshTokenExpiration, middleware.GetReqID(r.Context()), u.ID)
 	if err != nil {
 		c.logger.Warn("controller login", zap.NamedError("refresh token", err))
 		res.SetStatusInternalServerError("")
+
 		return
 	}
 
 	res.SetPayload(&token{AuthToken: authToken, RefreshToken: refreshToken})
-
 }
 
-func (c *Auth) token(r *http.Request, expiration time.Duration, requestID, userID string) (string, error) {
+func (c *Auth) token(expiration time.Duration, requestID, userID string) (string, error) {
 	_, token, err := c.jwtauth.Encode(jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(expiration).Unix(),
 		Id:        requestID,
