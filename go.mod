@@ -4,7 +4,9 @@ go 1.13
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-chi/chi v4.0.2+incompatible
+	github.com/go-chi/jwtauth v4.0.3+incompatible
 	github.com/go-chi/valve v0.0.0-20170920024740-9e45288364f4
 	github.com/google/uuid v1.1.1
 	github.com/jmoiron/sqlx v1.2.0
@@ -16,3 +18,5 @@ require (
 	google.golang.org/appengine v1.6.5 // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 )
+
+replace encoding/json => github.com/json-iterator/go v1.1.8

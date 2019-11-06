@@ -14,9 +14,11 @@ var _ store.Users = (*Users)(nil)
 
 // Users implements store.Users interface.
 type Users struct {
-	db         *sqlx.DB
-	tableName  string
-	prepInsert *sqlx.NamedStmt
+	db              *sqlx.DB
+	tableName       string
+	prepFindByID    *sqlx.NamedStmt
+	prepFindByEmail *sqlx.NamedStmt
+	prepInsert      *sqlx.NamedStmt
 }
 
 // NewUsers creates new users store.
@@ -33,21 +35,61 @@ func NewUsers(db *sqlx.DB, opts ...UsersOption) *Users {
 	return u
 }
 
-// Insert implements store.Users interface.
-func (us *Users) Insert(ctx context.Context, u *model.User) error {
+// FindByID finds user by id (UUID).
+func (s *Users) FindByID(ctx context.Context, id string) (*model.User, error) {
 	var err error
 
-	if us.prepInsert == nil {
-		sql := "INSERT INTO table (id, email, password) VALUES (:id, :email, :password)"
-		sql = strings.Replace(sql, "table", us.tableName, 1)
+	if s.prepFindByID == nil {
+		sql := "SELECT id, email, password FROM table WHERE id=:id"
+		sql = strings.Replace(sql, "table", s.tableName, 1)
 
-		us.prepInsert, err = us.db.PrepareNamedContext(ctx, sql)
+		s.prepFindByID, err = s.db.PrepareNamedContext(ctx, sql)
+		if err != nil {
+			return nil, fmt.Errorf("prepare: %w", err)
+		}
+	}
+
+	var u *model.User
+	err = s.prepFindByID.QueryRowContext(ctx, id).Scan(u)
+
+	return u, err
+}
+
+// FindByEmail finds user by email address.
+func (s *Users) FindByEmail(ctx context.Context, email string) (*model.User, error) {
+	var err error
+
+	if s.prepFindByEmail == nil {
+		sql := "SELECT id, email, password FROM table WHERE email=:email"
+		sql = strings.Replace(sql, "table", s.tableName, 1)
+
+		s.prepFindByEmail, err = s.db.PrepareNamedContext(ctx, sql)
+		if err != nil {
+			return nil, fmt.Errorf("prepare: %w", err)
+		}
+	}
+
+	var u *model.User
+	err = s.prepFindByEmail.QueryRowContext(ctx, email).Scan(u)
+
+	return u, err
+}
+
+// Insert implements store.Users interface.
+func (s *Users) Insert(ctx context.Context, u *model.User) error {
+	var err error
+
+	if s.prepInsert == nil {
+		sql := "INSERT INTO table (id, email, password) VALUES (:id, :email, :password)"
+		sql = strings.Replace(sql, "table", s.tableName, 1)
+
+		s.prepInsert, err = s.db.PrepareNamedContext(ctx, sql)
 		if err != nil {
 			return fmt.Errorf("prepare: %w", err)
 		}
 	}
 
-	_, err = us.prepInsert.ExecContext(ctx, u)
+	_, err = s.prepInsert.ExecContext(ctx, u)
 
 	return err
 }
