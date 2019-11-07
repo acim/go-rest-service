@@ -1,7 +1,10 @@
 package controller
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -39,7 +42,7 @@ func NewAuth(users store.Users, jwtauth *jwtauth.JWTAuth, logger *zap.Logger, op
 	return a
 }
 
-// Login ...
+// Login handles /auth/login endpoint.
 func (c *Auth) Login(w http.ResponseWriter, r *http.Request) {
 	res := abmiddleware.ResponseFromContext(r.Context())
 
@@ -85,6 +88,28 @@ func (c *Auth) Login(w http.ResponseWriter, r *http.Request) {
 	res.SetPayload(&token{AuthToken: authToken, RefreshToken: refreshToken})
 }
 
+// User handles /auth/user endpoint.
+func (c *Auth) User(w http.ResponseWriter, r *http.Request) {
+	res := abmiddleware.ResponseFromContext(r.Context())
+
+	userID, err := getUserID(r.Context())
+	if err != nil {
+		c.logger.Warn("user", zap.NamedError("get user id", err))
+		res.SetStatusInternalServerError(err.Error())
+		return
+	}
+
+	user, err := c.users.FindByID(r.Context(), userID)
+	if err != nil {
+		c.logger.Warn("user", zap.NamedError("find by id", err))
+		res.SetStatusNotFound(fmt.Sprintf("user %s not found", userID))
+		return
+	}
+
+	user.Password = ""
+	res.SetPayload(user)
+}
+
 func (c *Auth) token(expiration time.Duration, requestID, userID string) (string, error) {
 	_, token, err := c.jwtauth.Encode(jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(expiration).Unix(),
@@ -96,6 +121,25 @@ func (c *Auth) token(expiration time.Duration, requestID, userID string) (string
 	}
 
 	return token, nil
+}
+
+func getUserID(ctx context.Context) (string, error) {
+	_, claims, err := jwtauth.FromContext(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	sub, ok := claims["sub"]
+	if !ok {
+		return "", errors.New("subject not found in authorization token")
+	}
+
+	userID, ok := sub.(string)
+	if !ok {
+		return "", errors.New("subject from authorization token is not of string type")
+	}
+
+	return userID, nil
 }
 
 // AuthOption ...

@@ -10,6 +10,7 @@ import (
 	"github.com/acim/go-rest-server/pkg/controller"
 	"github.com/acim/go-rest-server/pkg/rest"
 	"github.com/acim/go-rest-server/pkg/store/pgstore"
+	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/jwtauth"
 	"github.com/jmoiron/sqlx"
@@ -58,14 +59,21 @@ func main() {
 
 	users := pgstore.NewUsers(db, pgstore.UsersTableName("admin"))
 
-	jwtauth := jwtauth.New("HS256", []byte(c.JWT.Secret), nil)
+	jwtAuth := jwtauth.New("HS256", []byte(c.JWT.Secret), nil)
 
-	authController := controller.NewAuth(users, jwtauth, logger)
+	authController := controller.NewAuth(users, jwtAuth, logger)
 
 	router := rest.DefaultRouter(c.ServiceName, logger)
 	router.Use(getCors().Handler)
 
 	router.Post("/auth/login", authController.Login)
+
+	router.Group(func(r chi.Router) {
+		r.Use(jwtauth.Verifier(jwtAuth))
+		r.Use(jwtauth.Authenticator)
+
+		r.Get("/auth/user", authController.User)
+	})
 
 	// router.Get("/heavy", func(w http.ResponseWriter, r *http.Request) {
 	// 	err := valve.Lever(r.Context()).Open()

@@ -49,8 +49,8 @@ func (s *Users) FindByID(ctx context.Context, id string) (*model.User, error) {
 		}
 	}
 
-	var u *model.User
-	err = s.prepFindByID.QueryRowContext(ctx, id).Scan(u)
+	u := &model.User{}
+	err = s.prepFindByID.QueryRowxContext(ctx, map[string]interface{}{"id": id}).StructScan(u)
 
 	return u, err
 }

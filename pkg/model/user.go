@@ -10,9 +10,9 @@ import (
 
 // User model.
 type User struct {
-	ID       string
-	Email    string
-	Password string
+	ID       string `json:"id"`
+	Email    string `json:"email"`
+	Password string `json:",omitempty"`
 }
 
 // NewUser creates new user model.

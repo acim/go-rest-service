@@ -63,6 +63,17 @@ func (r *Response) SetStatusInternalServerError(err string) *Response {
 	return r
 }
 
+// SetStatusNotFound sets status code to http.StatusNotFound.
+func (r *Response) SetStatusNotFound(err string) *Response {
+	r.statusCode = http.StatusNotFound
+
+	if err != "" {
+		r.AddError(err)
+	}
+
+	return r
+}
+
 // SetHeader sets header to response.
 func (r *Response) SetHeader(key, value string) *Response {
 	r.headers[key] = value
