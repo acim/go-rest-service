@@ -96,6 +96,7 @@ func (c *Auth) User(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		c.logger.Warn("user", zap.NamedError("get user id", err))
 		res.SetStatusInternalServerError(err.Error())
+
 		return
 	}
 
@@ -103,11 +104,27 @@ func (c *Auth) User(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		c.logger.Warn("user", zap.NamedError("find by id", err))
 		res.SetStatusNotFound(fmt.Sprintf("user %s not found", userID))
+
 		return
 	}
 
 	user.Password = ""
 	res.SetPayload(user)
+}
+
+// Logout handles /auth/logout endpoint.
+func (c *Auth) Logout(w http.ResponseWriter, r *http.Request) {
+	res := abmiddleware.ResponseFromContext(r.Context())
+
+	userID, err := getUserID(r.Context())
+	if err != nil {
+		c.logger.Warn("user", zap.NamedError("get user id", err))
+		res.SetStatusInternalServerError(err.Error())
+
+		return
+	}
+
+	c.logger.Info("logout", zap.String("user id", userID))
 }
 
 func (c *Auth) token(expiration time.Duration, requestID, userID string) (string, error) {

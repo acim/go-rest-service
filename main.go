@@ -73,6 +73,7 @@ func main() {
 		r.Use(jwtauth.Authenticator)
 
 		r.Get("/auth/user", authController.User)
+		r.Get("/auth/logout", authController.Logout)
 	})
 
 	// router.Get("/heavy", func(w http.ResponseWriter, r *http.Request) {

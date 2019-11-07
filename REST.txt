@@ -5,3 +5,9 @@ Content-Type: application/json
     "email": "acim@acim.net",
     "password": "mysecret"
 }
+
+
+
+GET http://localhost:3000/auth/logout
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzMxNjE1NjcsImp0aSI6IjRkNTFjMTVlNTA0MS9ETUtsYWJPZXRELTAwMDAwMSIsInN1YiI6IjI4Yjc1YzViLTAxOGQtMTFlYS04ZWYyLTAyNDJhYzE1MDAwNCJ9.XHYyBvQ9AnGUfTShWA0bJZt60gUSFfWfNYtl6ObS1_g

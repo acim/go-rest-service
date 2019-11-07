@@ -18,4 +18,4 @@ Inside .examples directory you can find basic examples for each of the middlewar
 
 To check the metrics in PromMetrics example, use this [url](http://localhost:3001) in your browser.
 
-## [JWT secret](https://www.grc.com/passwords.htm)
+## [Generate your JWT secret here](https://www.grc.com/passwords.htm)
