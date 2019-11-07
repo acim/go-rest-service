@@ -5,7 +5,7 @@
 
 You can run the server by typing **docker-compose up --build**.
 
-Check main.go for example usage.
+Check [main.go](https://github.com/acim/go-rest-server/blob/master/main.go) for example usage.
 
 ## This project also includes the following middlewares which can be use independently of the server
 
@@ -14,8 +14,7 @@ Check main.go for example usage.
 * PromMetrics - [chi](https://github.com/go-chi/chi) middleware providing [Prometheus](https://prometheus.io/) metrics to your HTTP server
   Tracks total number of requests and requests duration partitioned by status code, method and request URI
 
-Inside .examples directory you can find basic examples for each of the middlewares. Just run **go run main.go** and check the output in your [browser](http://localhost:3000).
-
-To check the metrics in PromMetrics example, use this [url](http://localhost:3001) in your browser.
+Inside .examples directory you can find basic examples for each of the middlewares. Just run **go run main.go** and
+check the output in your browser, localhost:3000. To check the metrics in PromMetrics example, use localhost:3001.
 
 ## [Generate your JWT secret here](https://www.grc.com/passwords.htm)
