@@ -11,9 +11,15 @@ services:
     - .docker:/docker-entrypoint-initdb.d
     environment:
       POSTGRES_PASSWORD: secret
+  adminer:
+    container_name: go-rest-server-adminer
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
   app:
     container_name: go-rest-server-app
-    image: acim/go-reflex
+    image: acim/go-reflex:1.13.4-2
     depends_on:
     - postgres
     environment:
