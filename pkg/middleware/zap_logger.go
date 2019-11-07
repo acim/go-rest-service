@@ -14,7 +14,10 @@ func ZapLogger(logger *zap.Logger) func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			start := time.Now()
 			ww := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
-			defer logger.Info(
+
+			next.ServeHTTP(ww, r)
+
+			logger.Info(
 				"request completed",
 				zap.Time("time", start),
 				zap.String("method", r.Method),
@@ -23,7 +26,6 @@ func ZapLogger(logger *zap.Logger) func(next http.Handler) http.Handler {
 				zap.Int("bytes", ww.BytesWritten()),
 				zap.Duration("duration", time.Since(start)),
 				zap.String("request_id", middleware.GetReqID(r.Context())))
-			next.ServeHTTP(ww, r)
 		})
 	}
 }
