@@ -20,8 +20,8 @@ RUN adduser -D ablab
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=builder /go/bin/ablab /usr/bin/ablab
 
+EXPOSE 3000 3001
+
 USER ablab
 
 ENTRYPOINT ["/usr/bin/ablab"]
-
-EXPOSE 3000 3001

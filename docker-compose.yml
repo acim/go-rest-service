@@ -19,7 +19,7 @@ services:
       - 8080:8080
   app:
     container_name: go-rest-server-app
-    image: acim/go-reflex:1.13.4-2
+    image: acim/go-reflex
     depends_on:
     - postgres
     environment:
