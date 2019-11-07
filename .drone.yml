@@ -23,24 +23,24 @@ steps:
       from_secret: sonarqube_token
   depends_on:
   - test
-- name: tag
-  image: busybox
-  commands:
-  - echo -n "${DRONE_BRANCH}-${DRONE_COMMIT_SHA:0:8}" > .tags
-  - if [ ${DRONE_BRANCH} = "master" ]; then echo -n ',stable,latest' >> .tags; else echo -n ',dev' >> .tags; fi
-  depends_on:
-  - lint
-  - sonarqube
-- name: build
-  image: ablab/drone-kaniko
-  settings:
-    repo: ablab/go-rest-server
-    username: acim
-    password:
-      from_secret: registry_password
-    use_cache: true
-  depends_on:
-  - tag
+# - name: tag
+#   image: busybox
+#   commands:
+#   - echo -n "${DRONE_BRANCH}-${DRONE_COMMIT_SHA:0:8}" > .tags
+#   - if [ ${DRONE_BRANCH} = "master" ]; then echo -n ',stable,latest' >> .tags; else echo -n ',dev' >> .tags; fi
+#   depends_on:
+#   - lint
+#   - sonarqube
+# - name: build
+#   image: ablab/drone-kaniko
+#   settings:
+#     repo: ablab/go-rest-server
+#     username: acim
+#     password:
+#       from_secret: registry_password
+#     use_cache: true
+#   depends_on:
+#   - tag
 
 volumes:
 - name: go-pkg-mod
