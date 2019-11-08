@@ -124,6 +124,7 @@ func (c *Auth) Logout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	res.SetStatus(http.StatusNoContent)
 	c.logger.Info("logout", zap.String("user id", userID))
 }
 

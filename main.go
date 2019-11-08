@@ -66,14 +66,14 @@ func main() {
 	router := rest.DefaultRouter(c.ServiceName, logger)
 	router.Use(getCors().Handler)
 
-	router.Post("/auth/login", authController.Login)
+	router.Post("/auth", authController.Login)
 
 	router.Group(func(r chi.Router) {
 		r.Use(jwtauth.Verifier(jwtAuth))
 		r.Use(jwtauth.Authenticator)
 
-		r.Get("/auth/user", authController.User)
-		r.Get("/auth/logout", authController.Logout)
+		r.Get("/auth", authController.User)
+		r.Delete("/auth", authController.Logout)
 	})
 
 	// router.Get("/heavy", func(w http.ResponseWriter, r *http.Request) {

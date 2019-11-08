@@ -95,7 +95,12 @@ func DefaultRouter(serviceName string, logger *zap.Logger) *chi.Mux {
 	r.Use(abmiddleware.RenderJSON)
 	r.Use(middleware.Recoverer)
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusNotFound)
+		res := abmiddleware.ResponseFromContext(r.Context())
+		res.SetStatusNotFound(http.StatusText(http.StatusNotFound))
+	})
+	r.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {
+		res := abmiddleware.ResponseFromContext(r.Context())
+		res.SetStatus(http.StatusMethodNotAllowed).AddError(http.StatusText(http.StatusMethodNotAllowed))
 	})
 
 	return r

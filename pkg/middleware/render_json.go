@@ -4,8 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-
-	"github.com/go-chi/chi/middleware"
 )
 
 type responseKey struct{}
@@ -13,9 +11,9 @@ type responseKey struct{}
 // Response ...
 type Response struct {
 	statusCode int
-	headers    map[string]string
-	Payload    interface{} `json:"data,omitempty"`
-	Errors     []string    `json:"errors,omitempty"`
+	headers    http.Header
+	payload    interface{}
+	errors     []string
 }
 
 // ResponseFromContext returns response from context.
@@ -24,8 +22,8 @@ func ResponseFromContext(ctx context.Context) *Response {
 	return response
 }
 
-// SetStatusCode sets status code to response. If status code is not set if will default to http.StatusOK.
-func (r *Response) SetStatusCode(statusCode int) *Response {
+// SetStatus sets status code to response. If status code is not set if will default to http.StatusOK.
+func (r *Response) SetStatus(statusCode int) *Response {
 	r.statusCode = statusCode
 	return r
 }
@@ -76,26 +74,26 @@ func (r *Response) SetStatusNotFound(err string) *Response {
 
 // SetHeader sets header to response.
 func (r *Response) SetHeader(key, value string) *Response {
-	r.headers[key] = value
+	r.headers.Set(key, value)
 	return r
 }
 
-// SetHeaders sets headers to response.
-func (r *Response) SetHeaders(headers map[string]string) *Response {
-	r.headers = headers
+// AddHeader ads headers to response.
+func (r *Response) AddHeader(key, value string) *Response {
+	r.headers.Add(key, value)
 	return r
 }
 
 // SetPayload sets payload to response.
 func (r *Response) SetPayload(payload interface{}) *Response {
-	r.Payload = payload
+	r.payload = payload
 
 	return r
 }
 
 // AddError adds error to response.
 func (r *Response) AddError(err string) *Response {
-	r.Errors = append(r.Errors, err)
+	r.errors = append(r.errors, err)
 	return r
 }
 
@@ -104,36 +102,53 @@ func RenderJSON(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), responseKey{}, newResponse())
 
-		ww := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
-		next.ServeHTTP(ww, r.WithContext(ctx))
+		// ww := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
+		next.ServeHTTP(w, r.WithContext(ctx))
 
-		if resp, ok := ctx.Value(responseKey{}).(*Response); ok {
-			if ww.Status() == http.StatusNotFound {
-				resp.AddError(http.StatusText(http.StatusNotFound))
+		if res, ok := ctx.Value(responseKey{}).(*Response); ok {
+			res.headers.Set("Content-Type", "application/json")
+
+			var body []byte
+			var err error
+
+			if res.payload != nil || len(res.errors) > 0 {
+				b := &response{
+					Payload: res.payload,
+					Errors:  res.errors,
+				}
+
+				body, err = json.Marshal(b)
+				if err != nil {
+					res.SetStatusInternalServerError("Error rendering response body")
+				}
 			}
 
-			body, err := json.Marshal(resp)
-			if err != nil {
-				ww.WriteHeader(http.StatusInternalServerError)
+			for hk, hsv := range res.headers {
+				for _, hv := range hsv {
+					w.Header().Add(hk, hv)
+				}
+			}
+
+			if res.statusCode > 0 {
+				w.WriteHeader(res.statusCode)
+			}
+
+			if res.statusCode == http.StatusNoContent {
 				return
 			}
 
-			resp.headers["Content-Type"] = "application/json"
-			for k, v := range resp.headers {
-				ww.Header().Set(k, v)
-			}
-
-			if resp.statusCode > 0 {
-				ww.WriteHeader(resp.statusCode)
-			}
-
-			_, _ = ww.Write(body)
+			_, _ = w.Write(body)
 		}
 	})
 }
 
 func newResponse() *Response {
 	return &Response{
-		headers: make(map[string]string, 1),
+		headers: make(http.Header, 1),
 	}
+}
+
+type response struct {
+	Payload interface{} `json:"data,omitempty"`
+	Errors  []string    `json:"errors,omitempty"`
 }
