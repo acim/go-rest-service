@@ -2,6 +2,8 @@ package pgstore
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -52,6 +54,10 @@ func (s *Users) FindByID(ctx context.Context, id string) (*model.User, error) {
 	u := &model.User{}
 	err = s.prepFindByID.QueryRowxContext(ctx, map[string]interface{}{"id": id}).StructScan(u)
 
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, store.ErrNotFound
+	}
+
 	return u, err
 }
 
@@ -71,6 +77,10 @@ func (s *Users) FindByEmail(ctx context.Context, email string) (*model.User, err
 
 	u := &model.User{}
 	err = s.prepFindByEmail.QueryRowxContext(ctx, map[string]interface{}{"email": email}).StructScan(u)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, store.ErrNotFound
+	}
 
 	return u, err
 }

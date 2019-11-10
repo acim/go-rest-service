@@ -58,6 +58,11 @@ func (c *Auth) Login(w http.ResponseWriter, r *http.Request) {
 
 	u, err := c.users.FindByEmail(r.Context(), l.Email)
 	if err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			res.SetStatusForbidden(errInvalidCredentials)
+			return
+		}
+
 		c.logger.Warn("login", zap.NamedError("find by email", err))
 		res.SetStatusInternalServerError("")
 

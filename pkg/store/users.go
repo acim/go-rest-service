@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"errors"
 
 	"github.com/acim/go-rest-server/pkg/model"
 )
@@ -12,3 +13,6 @@ type Users interface {
 	FindByEmail(ctx context.Context, email string) (*model.User, error)
 	Insert(ctx context.Context, user *model.User) error
 }
+
+// ErrNotFound it returned when there are no results in the query.
+var ErrNotFound = errors.New("not found")
