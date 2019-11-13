@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -13,11 +12,9 @@ import (
 	"github.com/acim/go-rest-server/pkg/store/pgstore"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/jwtauth"
-	"github.com/jmoiron/sqlx"
 	"github.com/kelseyhightower/envconfig"
 	_ "github.com/lib/pq"
 	"github.com/mailgun/mailgun-go/v3"
-	"go.uber.org/zap"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -50,15 +47,12 @@ func main() {
 		log.Fatalf("failed parsing environment variables: %v", err)
 	}
 
-	logger, err := logger(c.Environment)
+	logger, err := rest.NewLogger(c.Environment)
 	if err != nil {
 		log.Fatalf("failed initializing logger: %v", err)
 	}
 
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
-		c.Database.Hostname, c.Database.Username, c.Database.Password, c.Database.Name)
-
-	db, err := sqlx.Connect("postgres", dsn)
+	db, err := pgstore.NewDB(c.Database.Hostname, c.Database.Username, c.Database.Password, c.Database.Name)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -105,27 +99,4 @@ func main() {
 	cmd.NewUserCmd(app, users)
 	cmd.NewServerCmd(app, rest.NewServer(c.ServiceName, c.ServerPort, c.MetricsPort, router, logger))
 	kingpin.MustParse(app.Parse(os.Args[1:]))
-}
-
-func logger(env string) (*zap.Logger, error) {
-	var logger *zap.Logger
-
-	var err error
-
-	switch env {
-	case "prod":
-		config := zap.NewProductionConfig()
-		config.Level = zap.NewAtomicLevelAt(zap.WarnLevel)
-		logger, err = config.Build()
-	case "dev":
-		logger, err = zap.NewDevelopment()
-	default:
-		return nil, fmt.Errorf("logger: unknown environment: '%s'", env)
-	}
-
-	if err != nil {
-		return nil, fmt.Errorf("logger: %w", err)
-	}
-
-	return logger, nil
 }
