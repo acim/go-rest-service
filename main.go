@@ -8,7 +8,6 @@ import (
 
 	"github.com/acim/go-rest-server/pkg/cmd"
 	"github.com/acim/go-rest-server/pkg/controller"
-	"github.com/acim/go-rest-server/pkg/middleware"
 	"github.com/acim/go-rest-server/pkg/rest"
 	"github.com/acim/go-rest-server/pkg/store/pgstore"
 	"github.com/go-chi/chi"
@@ -63,8 +62,7 @@ func main() {
 
 	authController := controller.NewAuth(users, jwtAuth, logger)
 
-	router := rest.DefaultRouter(c.ServiceName, logger)
-	router.Use(middleware.Cors(nil).Handler)
+	router := rest.DefaultRouter(c.ServiceName, nil, logger)
 
 	router.Post("/auth", authController.Login)
 
