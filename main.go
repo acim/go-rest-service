@@ -8,10 +8,10 @@ import (
 
 	"github.com/acim/go-rest-server/pkg/cmd"
 	"github.com/acim/go-rest-server/pkg/controller"
+	"github.com/acim/go-rest-server/pkg/middleware"
 	"github.com/acim/go-rest-server/pkg/rest"
 	"github.com/acim/go-rest-server/pkg/store/pgstore"
 	"github.com/go-chi/chi"
-	"github.com/go-chi/cors"
 	"github.com/go-chi/jwtauth"
 	"github.com/jmoiron/sqlx"
 	"github.com/kelseyhightower/envconfig"
@@ -64,7 +64,7 @@ func main() {
 	authController := controller.NewAuth(users, jwtAuth, logger)
 
 	router := rest.DefaultRouter(c.ServiceName, logger)
-	router.Use(getCors().Handler)
+	router.Use(middleware.Cors(nil).Handler)
 
 	router.Post("/auth", authController.Login)
 
@@ -122,17 +122,4 @@ func logger(env string) (*zap.Logger, error) {
 	}
 
 	return logger, nil
-}
-
-func getCors() *cors.Cors {
-	return cors.New(cors.Options{
-		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
-		AllowedOrigins: []string{"*"},
-		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-		ExposedHeaders:   []string{"Link"},
-		AllowCredentials: true,
-		MaxAge:           300, // Maximum value not ignored by any of major browsers
-	})
 }
