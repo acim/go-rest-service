@@ -8,6 +8,7 @@ import (
 
 	"github.com/acim/go-rest-server/pkg/cmd"
 	"github.com/acim/go-rest-server/pkg/controller"
+	"github.com/acim/go-rest-server/pkg/mail"
 	"github.com/acim/go-rest-server/pkg/rest"
 	"github.com/acim/go-rest-server/pkg/store/pgstore"
 	"github.com/go-chi/chi"
@@ -15,6 +16,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/kelseyhightower/envconfig"
 	_ "github.com/lib/pq"
+	"github.com/mailgun/mailgun-go/v3"
 	"go.uber.org/zap"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
@@ -67,9 +69,14 @@ func main() {
 
 	authController := controller.NewAuth(users, jwtAuth, logger)
 
+	mailSender := mail.NewMailgun(mailgun.NewMailgun(c.Mailgun.Domain, c.Mailgun.APIKey))
+	mailController := controller.NewMail(mailSender, c.Mailgun.Recipient, logger)
+
 	router := rest.DefaultRouter(c.ServiceName, nil, logger)
 
 	router.Post("/auth", authController.Login)
+
+	router.Post("/mail", mailController.Send)
 
 	router.Group(func(r chi.Router) {
 		r.Use(jwtauth.Verifier(jwtAuth))

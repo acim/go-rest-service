@@ -19,6 +19,15 @@ type Mail struct {
 	logger *zap.Logger
 }
 
+// NewMail creates new mail controller.
+func NewMail(sender mail.Sender, recipient string, logger *zap.Logger) *Mail {
+	return &Mail{
+		mail:   sender,
+		to:     recipient,
+		logger: logger,
+	}
+}
+
 // Send sends e-mail from contact form.
 func (c *Mail) Send(w http.ResponseWriter, r *http.Request) {
 	res := middleware.ResponseFromContext(r.Context())

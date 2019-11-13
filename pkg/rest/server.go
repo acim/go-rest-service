@@ -94,6 +94,7 @@ func DefaultRouter(serviceName string, allowedOrigins []string, logger *zap.Logg
 	r.Use(middleware.Heartbeat("/health"))
 	r.Use(abmiddleware.ZapLogger(logger))
 	r.Use(abmiddleware.PromMetrics(serviceName, nil))
+
 	if len(allowedOrigins) > 0 {
 		r.Use(getCORS(allowedOrigins).Handler)
 	}
@@ -116,6 +117,7 @@ func getCORS(allowedOrigins []string) *cors.Cors {
 	if len(allowedOrigins) == 0 {
 		allowedOrigins = []string{"*"}
 	}
+
 	return cors.New(cors.Options{
 		AllowedOrigins:   allowedOrigins,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
