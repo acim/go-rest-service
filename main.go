@@ -64,18 +64,14 @@ func main() {
 	}
 
 	users := pgstore.NewUsers(db, pgstore.UsersTableName("admin"))
-
 	jwtAuth := jwtauth.New("HS256", []byte(c.JWT.Secret), nil)
-
 	authController := controller.NewAuth(users, jwtAuth, logger)
 
 	mailSender := mail.NewMailgun(mailgun.NewMailgun(c.Mailgun.Domain, c.Mailgun.APIKey))
 	mailController := controller.NewMail(mailSender, c.Mailgun.Recipient, logger)
 
 	router := rest.DefaultRouter(c.ServiceName, nil, logger)
-
 	router.Post("/auth", authController.Login)
-
 	router.Post("/mail", mailController.Send)
 
 	router.Group(func(r chi.Router) {
