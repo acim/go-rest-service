@@ -1,9 +1,13 @@
+.docker
 .drone.yml
+.examples
 .git
+.gitignore
 .vscode
 Dockerfile
 LICENSE
+Makefile
 README.md
+REST.txt
 docker-compose.yml
-.docker
-.examples
+sonar-project.properties

@@ -35,6 +35,11 @@ type config struct {
 		Password string `envconfig:"DB_PASS" required:"true"`
 		Name     string `envconfig:"DB_NAME" required:"true"`
 	}
+	Mailgun struct {
+		Domain    string `envconfig:"MG_DOMAIN" required:"true"`
+		APIKey    string `envconfig:"MG_API_KEY" required:"true"`
+		Recipient string `envconfig:"MG_EMAIL_TO" default:"boban.acimovic@gmail.com"`
+	}
 }
 
 func main() {

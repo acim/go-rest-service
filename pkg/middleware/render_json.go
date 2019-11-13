@@ -72,6 +72,12 @@ func (r *Response) SetStatusNotFound(err string) *Response {
 	return r
 }
 
+// SetStatusAccepted sets status code to http.StatusAccepted.
+func (r *Response) SetStatusAccepted() *Response {
+	r.statusCode = http.StatusAccepted
+	return r
+}
+
 // SetHeader sets header to response.
 func (r *Response) SetHeader(key, value string) *Response {
 	r.headers.Set(key, value)

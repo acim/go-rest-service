@@ -11,10 +11,13 @@ require (
 	github.com/go-chi/cors v1.0.0
 	github.com/go-chi/jwtauth v4.0.3+incompatible
 	github.com/go-chi/valve v0.0.0-20170920024740-9e45288364f4
+	github.com/gobuffalo/envy v1.7.1 // indirect
 	github.com/google/uuid v1.1.1
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/lib/pq v1.0.0
+	github.com/mailgun/mailgun-go v2.0.0+incompatible
+	github.com/mailgun/mailgun-go/v3 v3.6.1
 	github.com/prometheus/client_golang v1.2.1
 	go.uber.org/zap v1.12.0
 	golang.org/x/crypto v0.0.0-20190510104115-cbcb75029529
