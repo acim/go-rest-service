@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"unicode"
 
 	"github.com/acim/go-rest-server/pkg/mail"
 	"github.com/acim/go-rest-server/pkg/middleware"
@@ -44,7 +45,7 @@ func (c *Mail) Send(w http.ResponseWriter, r *http.Request) {
 
 	if err = mr.validate(); err != nil {
 		c.logger.Warn("send", zap.NamedError("validate", err))
-		res.SetStatusBadRequest(err.Error())
+		res.SetStatusBadRequest(firstToUpper(err.Error()))
 
 		return
 	}
@@ -85,4 +86,11 @@ func (m *mailReq) validate() error {
 	}
 
 	return nil
+}
+
+func firstToUpper(str string) string {
+	for i, v := range str {
+		return string(unicode.ToUpper(v)) + str[i+1:]
+	}
+	return ""
 }
