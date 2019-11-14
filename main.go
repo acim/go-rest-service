@@ -35,9 +35,9 @@ type config struct {
 		Name     string `envconfig:"DB_NAME" required:"true"`
 	}
 	Mailgun struct {
-		Domain    string `envconfig:"MG_DOMAIN" required:"true"`
-		APIKey    string `envconfig:"MG_API_KEY" required:"true"`
-		Recipient string `envconfig:"MG_EMAIL_TO" default:"boban.acimovic@gmail.com"`
+		Domain    string `envconfig:"MG_DOMAIN"`
+		APIKey    string `envconfig:"MG_API_KEY"`
+		Recipient string `envconfig:"MG_EMAIL_TO"`
 	}
 }
 
