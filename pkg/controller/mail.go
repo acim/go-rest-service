@@ -72,7 +72,7 @@ type mailReq struct {
 	Company   string `json:"company"`
 	From      string `json:"from"`
 	Subject   string `json:"subject"`
-	Text      string `json:"Text"`
+	Text      string `json:"text"`
 }
 
 // Validate input data.
