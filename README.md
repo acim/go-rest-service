@@ -1,7 +1,6 @@
 # Go skeleton application for REST server with additional metrics endpoint
 
-[![Build Status](https://drone.ablab.de/api/badges/acim/go-rest-server/status.svg)](https://drone.ablab.de/acim/go-rest-server)
-[![Quality Gate Status](https://sonarqube.ablab.de/api/project_badges/measure?project=acim%3Ago-rest-server&metric=alert_status)](https://sonarqube.ablab.de/dashboard?id=acim%3Ago-rest-server)
+[![HitCount](http://hits.dwyl.com/acim/go-rest-server.svg)](http://hits.dwyl.com/acim/go-rest-server)
 
 You can run the server by typing **docker-compose up --build**.
 
