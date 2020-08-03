@@ -19,7 +19,7 @@ require (
 	github.com/mailgun/mailgun-go v2.0.0+incompatible
 	github.com/mailgun/mailgun-go/v3 v3.6.1
 	github.com/prometheus/client_golang v1.2.1
-	go.uber.org/zap v1.12.0
+	go.uber.org/zap v1.15.0
 	golang.org/x/crypto v0.0.0-20190510104115-cbcb75029529
 	google.golang.org/appengine v1.6.5 // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
