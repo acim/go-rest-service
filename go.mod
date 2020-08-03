@@ -15,7 +15,7 @@ require (
 	github.com/google/uuid v1.1.1
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/lib/pq v1.0.0
+	github.com/lib/pq v1.8.0
 	github.com/mailgun/mailgun-go v2.0.0+incompatible
 	github.com/mailgun/mailgun-go/v3 v3.6.1
 	github.com/prometheus/client_golang v1.2.1
