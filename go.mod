@@ -7,7 +7,7 @@ replace encoding/json => github.com/json-iterator/go v1.1.8
 require (
 	github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/go-chi/chi v4.0.2+incompatible
+	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/cors v1.0.0
 	github.com/go-chi/jwtauth v4.0.3+incompatible
 	github.com/go-chi/valve v0.0.0-20170920024740-9e45288364f4
