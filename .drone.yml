@@ -1,6 +1,6 @@
 ---
 kind: pipeline
-type: docker
+type: kubernetes
 name: default
 
 steps:
@@ -8,41 +8,10 @@ steps:
   image: golangci/golangci-lint:latest-alpine
   commands:
   - golangci-lint run --enable-all
-- name: test
+- name: test-build
   image: golang:1-alpine
   commands:
   - CGO_ENABLED=0 go test -json -coverprofile=coverage.out ./... >tests.json
-  volumes:
-  - name: go-pkg-mod
-    path: /go/pkg/mod
-- name: sonarqube
-  image: aosapps/drone-sonar-plugin
-  settings:
-    sonar_host: https://sonarqube.ablab.de
-    sonar_token:
-      from_secret: sonarqube_token
+  - CGO_ENABLED=0 go build -a -installsuffix cgo -ldflags="-s -w" .
   depends_on:
   - test
-# - name: tag
-#   image: busybox
-#   commands:
-#   - echo -n "${DRONE_BRANCH}-${DRONE_COMMIT_SHA:0:8}" > .tags
-#   - if [ ${DRONE_BRANCH} = "master" ]; then echo -n ',stable,latest' >> .tags; else echo -n ',dev' >> .tags; fi
-#   depends_on:
-#   - lint
-#   - sonarqube
-# - name: build
-#   image: ablab/drone-kaniko
-#   settings:
-#     repo: ablab/go-rest-server
-#     username: acim
-#     password:
-#       from_secret: registry_password
-#     use_cache: true
-#   depends_on:
-#   - tag
-
-volumes:
-- name: go-pkg-mod
-  host:
-    path: /tmp/cache/${DRONE_REPO}/go-pkg-mod
