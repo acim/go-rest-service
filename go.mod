@@ -12,7 +12,7 @@ require (
 	github.com/google/uuid v1.1.2
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/lib/pq v1.8.0
+	github.com/lib/pq v1.9.0
 	github.com/mailgun/mailgun-go/v3 v3.6.4
 	github.com/prometheus/client_golang v1.8.0
 	go.uber.org/zap v1.16.0
