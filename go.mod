@@ -1,9 +1,10 @@
 module github.com/acim/go-rest-server
 
-go 1.14
+go 1.15
 
 require (
-	github.com/asaskevich/govalidator v0.0.0-20200428143746-21a406dcc535
+	github.com/alecthomas/units v0.0.0-20210208195552-ff826a37aa15 // indirect
+	github.com/asaskevich/govalidator v0.0.0-20200817114649-df4adffc9d8c
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/cors v1.1.1
@@ -14,8 +15,16 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/lib/pq v1.9.0
 	github.com/mailgun/mailgun-go/v3 v3.6.4
+	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/prometheus/client_golang v1.9.0
+	github.com/prometheus/procfs v0.5.0 // indirect
+	github.com/stretchr/testify v1.6.1 // indirect
+	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0
-	golang.org/x/crypto v0.0.0-20200728195943-123391ffb6de
+	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
+	golang.org/x/mod v0.4.1 // indirect
+	golang.org/x/sys v0.0.0-20210124154548-22da62e12c0c // indirect
+	golang.org/x/tools v0.0.0-20210114065538-d78b04bdf963 // indirect
+	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 )
