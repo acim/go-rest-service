@@ -18,7 +18,7 @@ import (
 )
 
 type config struct {
-	ServiceName string `def:"rest-server"`
+	ServiceName string `def:"arc"`
 	ServerPort  int    `def:"3000"`
 	MetricsPort int    `def:"3001"`
 	Environment string `def:"dev"`
@@ -43,7 +43,7 @@ type config struct {
 func main() { //nolint:funlen
 	c := &config{}
 
-	cmd := act.New("rest-server")
+	cmd := act.New("arc")
 
 	if err := cmd.Parse(c, os.Args[1:]); err != nil {
 		fmt.Printf("parse arguments: %v\n", err) //nolint:forbidigo

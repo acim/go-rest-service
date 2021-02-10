@@ -30,4 +30,4 @@ jobs:
           make lint
       - name: Build
         run: |
-          go build ./cmd/rest-server
+          go build ./cmd/arc
