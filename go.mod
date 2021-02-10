@@ -10,13 +10,12 @@ require (
 	github.com/go-chi/jwtauth v4.0.4+incompatible
 	github.com/go-chi/valve v0.0.0-20170920024740-9e45288364f4
 	github.com/google/uuid v1.2.0
-	github.com/jmoiron/sqlx v1.2.0
+	github.com/jmoiron/sqlx v1.3.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/lib/pq v1.9.0
 	github.com/mailgun/mailgun-go/v3 v3.6.4
 	github.com/prometheus/client_golang v1.9.0
 	go.uber.org/zap v1.16.0
 	golang.org/x/crypto v0.0.0-20200728195943-123391ffb6de
-	google.golang.org/appengine v1.6.6 // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 )
