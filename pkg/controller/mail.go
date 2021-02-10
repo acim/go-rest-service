@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"unicode"
 
-	"github.com/acim/go-rest-server/pkg/mail"
-	"github.com/acim/go-rest-server/pkg/middleware"
+	"github.com/acim/arc/pkg/mail"
+	"github.com/acim/arc/pkg/middleware"
 	"github.com/asaskevich/govalidator"
 	"go.uber.org/zap"
 )

@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"time"
 
-	abmiddleware "github.com/acim/go-rest-server/pkg/middleware"
-	"github.com/acim/go-rest-server/pkg/store"
+	abmiddleware "github.com/acim/arc/pkg/middleware"
+	"github.com/acim/arc/pkg/store"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/jwtauth"

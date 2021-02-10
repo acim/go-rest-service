@@ -1,13 +1,13 @@
 # Go skeleton application for REST server with additional metrics endpoint
 
-![check](https://github.com/acim/go-rest-server/workflows/check/badge.svg)
-[![Go Reference](https://pkg.go.dev/badge/github.com/acim/go-rest-server.svg)](https://pkg.go.dev/github.com/acim/go-rest-server)
-[![Go Report](https://goreportcard.com/badge/github.com/acim/go-rest-server)](https://goreportcard.com/report/github.com/acim/go-rest-server)
-[![License](https://img.shields.io/github/license/acim/go-rest-server)](LICENSE)
+![check](https://github.com/acim/arc/workflows/check/badge.svg)
+[![Go Reference](https://pkg.go.dev/badge/github.com/acim/arc.svg)](https://pkg.go.dev/github.com/acim/arc)
+[![Go Report](https://goreportcard.com/badge/github.com/acim/arc)](https://goreportcard.com/report/github.com/acim/arc)
+[![License](https://img.shields.io/github/license/acim/arc)](LICENSE)
 
 You can run the server by typing **docker-compose up --build**.
 
-Check [main.go](https://github.com/acim/go-rest-server/blob/master/main.go) for example usage.
+Check [main.go](https://github.com/acim/arc/blob/main/cmd/arc/main.go) for example usage.
 
 ## This project also includes the following middlewares which can be use independently of the server
 

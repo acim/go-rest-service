@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/acim/go-rest-server/pkg/middleware"
+	"github.com/acim/arc/pkg/middleware"
 	"github.com/go-chi/chi"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )

@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/acim/go-rest-server/pkg/model"
-	"github.com/acim/go-rest-server/pkg/store"
+	"github.com/acim/arc/pkg/model"
+	"github.com/acim/arc/pkg/store"
 	"github.com/jmoiron/sqlx"
 )
 

@@ -1,8 +1,9 @@
-module github.com/acim/go-rest-server
+module github.com/acim/arc
 
 go 1.15
 
 require (
+	github.com/acim/go-rest-server v0.0.0-20210210105133-a69ed84e8582
 	github.com/asaskevich/govalidator v0.0.0-20200817114649-df4adffc9d8c
 	github.com/cockroachdb/apd v1.1.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible

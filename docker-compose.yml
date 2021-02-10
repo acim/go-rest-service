@@ -3,14 +3,14 @@ version: '3.9'
 
 services:
   postgres:
-    container_name: go-rest-server-postgres
+    container_name: arc-postgres
     image: postgres:12-alpine
     restart: always
     volumes:
       - postgres:/var/lib/postgresql/data
       - .docker:/docker-entrypoint-initdb.d
   adminer:
-    container_name: go-rest-server-adminer
+    container_name: arc-adminer
     image: adminer
     depends_on:
       - postgres
@@ -18,7 +18,7 @@ services:
     ports:
       - 8080:8080
   app:
-    container_name: go-rest-server-app
+    container_name: arc-app
     image: acim/go-reflex
     depends_on:
       - postgres

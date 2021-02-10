@@ -3,7 +3,7 @@ package rest
 import (
 	"net/http"
 
-	abmiddleware "github.com/acim/go-rest-server/pkg/middleware"
+	abmiddleware "github.com/acim/arc/pkg/middleware"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"

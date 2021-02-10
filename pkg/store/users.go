@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/acim/go-rest-server/pkg/model"
+	"github.com/acim/arc/pkg/model"
 )
 
 // Users ...
