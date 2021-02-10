@@ -1,0 +1,14 @@
+{
+  "cSpell.words": [
+    "acim",
+    "cors",
+    "govalidator",
+    "jwtauth",
+    "middlewares",
+    "pgstore",
+    "postgres",
+    "sqlx",
+    "struct",
+    "uuid"
+  ]
+}

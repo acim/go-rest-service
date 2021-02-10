@@ -4,10 +4,10 @@
 .git
 .gitignore
 .vscode
+docker-compose.yml
 Dockerfile
 LICENSE
 Makefile
 README.md
 REST.txt
-docker-compose.yml
 sonar-project.properties
