@@ -58,7 +58,11 @@ func (s *Users) FindByID(ctx context.Context, id string) (*model.User, error) {
 		return nil, store.ErrNotFound
 	}
 
-	return u, err
+	if err != nil {
+		return nil, fmt.Errorf("find user by id: %w", err)
+	}
+
+	return u, nil
 }
 
 // FindByEmail finds user by email address.
@@ -82,7 +86,11 @@ func (s *Users) FindByEmail(ctx context.Context, email string) (*model.User, err
 		return nil, store.ErrNotFound
 	}
 
-	return u, err
+	if err != nil {
+		return nil, fmt.Errorf("find user by email: %w", err)
+	}
+
+	return u, nil
 }
 
 // Insert implements store.Users interface.
@@ -101,7 +109,11 @@ func (s *Users) Insert(ctx context.Context, u *model.User) error {
 
 	_, err = s.prepInsert.ExecContext(ctx, u)
 
-	return err
+	if err != nil {
+		return fmt.Errorf("insert user: %w", err)
+	}
+
+	return nil
 }
 
 // UsersOption ...

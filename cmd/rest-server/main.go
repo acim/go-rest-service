@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -15,6 +14,7 @@ import (
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/mailgun/mailgun-go/v4"
 	"go.ectobit.com/act"
+	"go.uber.org/zap"
 )
 
 type config struct {
@@ -40,24 +40,25 @@ type config struct {
 	}
 }
 
-func main() {
+func main() { //nolint:funlen
 	c := &config{}
 
 	cmd := act.New("rest-server")
 
 	if err := cmd.Parse(c, os.Args[1:]); err != nil {
-		fmt.Println(err)
-		os.Exit(2)
+		fmt.Printf("parse arguments: %v\n", err) //nolint:forbidigo
+		os.Exit(2)                               //nolint:gomnd
 	}
 
 	logger, err := rest.NewLogger(c.Environment)
 	if err != nil {
-		log.Fatalf("failed initializing logger: %v", err)
+		fmt.Printf("logger: %v\n", err) //nolint:forbidigo
+		os.Exit(2)                      //nolint:gomnd
 	}
 
 	db, err := pgstore.NewDB(c.Database.Hostname, c.Database.Username, c.Database.Password, c.Database.Name)
 	if err != nil {
-		log.Fatalln(err)
+		logger.Error("pg connect", zap.Error(err))
 	}
 
 	users := pgstore.NewUsers(db, pgstore.UsersTableName("admin"))

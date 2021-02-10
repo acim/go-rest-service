@@ -32,9 +32,11 @@ func NewServer(serviceName string, serverPort, metricsPort int, router *chi.Mux,
 		valve:       valve.New(),
 		logger:      logger,
 	}
-	s.server = &http.Server{Addr: ":" + strconv.Itoa(serverPort),
-		Handler: chi.ServerBaseContext(s.valve.Context(), s.router)}
-	s.metricsServer = &http.Server{Addr: ":" + strconv.Itoa(metricsPort), Handler: promhttp.Handler()}
+	s.server = &http.Server{ //nolint:exhaustivestruct
+		Addr:    ":" + strconv.Itoa(serverPort),
+		Handler: chi.ServerBaseContext(s.valve.Context(), s.router),
+	}
+	s.metricsServer = &http.Server{Addr: ":" + strconv.Itoa(metricsPort), Handler: promhttp.Handler()} //nolint:exhaustivestruct,lll
 
 	return s
 }
@@ -43,6 +45,7 @@ func NewServer(serviceName string, serverPort, metricsPort int, router *chi.Mux,
 func (s *Server) Run() {
 	go func() {
 		s.logger.Info("metrics server", zap.String("name", s.serviceName), zap.String("port", s.metricsServer.Addr))
+
 		if err := s.metricsServer.ListenAndServe(); err != nil {
 			s.logger.Error("metrics server", zap.Error(err))
 		}
@@ -64,11 +67,11 @@ func (s *Server) shutdown() {
 	<-ch
 	s.logger.Info("shutdown activated")
 
-	if err := s.valve.Shutdown(20 * time.Second); err != nil {
+	if err := s.valve.Shutdown(20 * time.Second); err != nil { //nolint:gomnd
 		s.logger.Error("shutdown", zap.Error(err))
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second) //nolint:gomnd
 	defer cancel()
 
 	if err := s.server.Shutdown(ctx); err != nil {
@@ -76,7 +79,7 @@ func (s *Server) shutdown() {
 	}
 
 	select {
-	case <-time.After(21 * time.Second):
+	case <-time.After(21 * time.Second): //nolint:gomnd
 		s.logger.Info("some connections not finished")
 	case <-ctx.Done():
 	}

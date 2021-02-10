@@ -43,12 +43,12 @@ func getCORS(allowedOrigins []string) *cors.Cors {
 		allowedOrigins = []string{"*"}
 	}
 
-	return cors.New(cors.Options{
+	return cors.New(cors.Options{ //nolint:exhaustivestruct
 		AllowedOrigins:   allowedOrigins,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
-		MaxAge:           300, // Maximum value not ignored by any of major browsers
+		MaxAge:           300, //nolint:gomnd
 	})
 }

@@ -2,6 +2,7 @@ package mail
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mailgun/mailgun-go/v4"
 )
@@ -26,7 +27,7 @@ func (m *Mailgun) Send(ctx context.Context, message *Mail) (*Response, error) {
 
 	res, id, err := m.mg.Send(ctx, msg)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("send mail: %w", err)
 	}
 
 	return &Response{

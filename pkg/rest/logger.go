@@ -1,10 +1,14 @@
 package rest
 
 import (
+	"errors"
 	"fmt"
 
 	"go.uber.org/zap"
 )
+
+// ErrInvalidEnvironment is returned when value of the passed environment is not valid.
+var ErrInvalidEnvironment = errors.New("unknown environment")
 
 // NewLogger creates new zap logger.
 func NewLogger(env string) (*zap.Logger, error) {
@@ -20,7 +24,7 @@ func NewLogger(env string) (*zap.Logger, error) {
 	case "dev":
 		logger, err = zap.NewDevelopment()
 	default:
-		return nil, fmt.Errorf("logger: unknown environment: '%s'", env)
+		return nil, fmt.Errorf("logger: %w", ErrInvalidEnvironment)
 	}
 
 	if err != nil {

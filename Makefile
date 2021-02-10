@@ -1,4 +1,4 @@
-.PHONY: lint test test-verbose start stop test-with-coverage
+.PHONY: lint test test-verbose test-with-coverage
 
 lint:
 	@golint ./...

@@ -19,12 +19,14 @@ type Response struct {
 // ResponseFromContext returns response from context.
 func ResponseFromContext(ctx context.Context) *Response {
 	response := ctx.Value(responseKey{}).(*Response)
+
 	return response
 }
 
 // SetStatus sets status code to response. If status code is not set if will default to http.StatusOK.
 func (r *Response) SetStatus(statusCode int) *Response {
 	r.statusCode = statusCode
+
 	return r
 }
 
@@ -75,18 +77,21 @@ func (r *Response) SetStatusNotFound(err string) *Response {
 // SetStatusAccepted sets status code to http.StatusAccepted.
 func (r *Response) SetStatusAccepted() *Response {
 	r.statusCode = http.StatusAccepted
+
 	return r
 }
 
 // SetHeader sets header to response.
 func (r *Response) SetHeader(key, value string) *Response {
 	r.headers.Set(key, value)
+
 	return r
 }
 
 // AddHeader ads headers to response.
 func (r *Response) AddHeader(key, value string) *Response {
 	r.headers.Add(key, value)
+
 	return r
 }
 
@@ -100,6 +105,7 @@ func (r *Response) SetPayload(payload interface{}) *Response {
 // AddError adds error to response.
 func (r *Response) AddError(err string) *Response {
 	r.errors = append(r.errors, err)
+
 	return r
 }
 
@@ -111,7 +117,7 @@ func RenderJSON(next http.Handler) http.Handler {
 		// ww := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
 		next.ServeHTTP(w, r.WithContext(ctx))
 
-		if res, ok := ctx.Value(responseKey{}).(*Response); ok {
+		if res, ok := ctx.Value(responseKey{}).(*Response); ok { //nolint:nestif
 			res.headers.Set("Content-Type", "application/json")
 
 			var body []byte

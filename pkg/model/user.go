@@ -8,6 +8,9 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// ErrEmptyPassword is returned if user supplied an empty password.
+var ErrEmptyPassword = errors.New("empty password")
+
 // User model.
 type User struct {
 	ID       string `json:"id"`
@@ -48,7 +51,7 @@ func (u *User) IsValidPassword(plainPassword string) bool {
 // HashPassword hashes password.
 func (u *User) HashPassword() error {
 	if u.Password == "" {
-		return errors.New("hash password: empty password")
+		return fmt.Errorf("hash password: %w", ErrEmptyPassword)
 	}
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)

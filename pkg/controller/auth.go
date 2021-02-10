@@ -16,6 +16,12 @@ import (
 	"go.uber.org/zap"
 )
 
+// Errors.
+var (
+	ErrNoSubject   = errors.New("subject not found")
+	ErrInvalidType = errors.New("invalid type")
+)
+
 // Auth controller.
 type Auth struct {
 	users                  store.Users
@@ -30,7 +36,7 @@ func NewAuth(users store.Users, jwtauth *jwtauth.JWTAuth, logger *zap.Logger, op
 	a := &Auth{
 		users:                  users,
 		jwtauth:                jwtauth,
-		authTokenExpiration:    15 * time.Minute,
+		authTokenExpiration:    15 * time.Minute, //nolint:gomnd
 		refreshTokenExpiration: 7 * 24 * time.Hour,
 		logger:                 logger,
 	}
@@ -60,6 +66,7 @@ func (c *Auth) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			res.SetStatusForbidden(errInvalidCredentials)
+
 			return
 		}
 
@@ -71,6 +78,7 @@ func (c *Auth) Login(w http.ResponseWriter, r *http.Request) {
 
 	if !u.IsValidPassword(l.Password) {
 		res.SetStatusForbidden(errInvalidCredentials)
+
 		return
 	}
 
@@ -134,13 +142,13 @@ func (c *Auth) Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Auth) token(expiration time.Duration, requestID, userID string) (string, error) {
-	_, token, err := c.jwtauth.Encode(jwt.StandardClaims{
+	_, token, err := c.jwtauth.Encode(jwt.StandardClaims{ //nolint:exhaustivestruct
 		ExpiresAt: time.Now().Add(expiration).Unix(),
 		Id:        requestID,
 		Subject:   userID,
 	})
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("encode token: %w", err)
 	}
 
 	return token, nil
@@ -149,17 +157,17 @@ func (c *Auth) token(expiration time.Duration, requestID, userID string) (string
 func getUserID(ctx context.Context) (string, error) {
 	_, claims, err := jwtauth.FromContext(ctx)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("jwt token parse: %w", err)
 	}
 
 	sub, ok := claims["sub"]
 	if !ok {
-		return "", errors.New("subject not found in authorization token")
+		return "", fmt.Errorf("jwt token: %w", ErrNoSubject)
 	}
 
 	userID, ok := sub.(string)
 	if !ok {
-		return "", errors.New("subject from authorization token is not of string type")
+		return "", fmt.Errorf("jwt token subject: %w", ErrInvalidType)
 	}
 
 	return userID, nil

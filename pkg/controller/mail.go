@@ -13,6 +13,9 @@ import (
 	"go.uber.org/zap"
 )
 
+// ErrInvalidValue is returned when a value is not defined or has wrong value.
+var ErrInvalidValue = errors.New("invalid value")
+
 // Mail controller.
 type Mail struct {
 	mail   mail.Sender
@@ -78,11 +81,11 @@ type mailReq struct {
 // Validate input data.
 func (m *mailReq) validate() error {
 	if (m.FirstName == "" && m.LastName == "") || m.From == "" || m.Subject == "" || m.Text == "" {
-		return errors.New("name, e-mail, subject or message not set")
+		return fmt.Errorf("name, e-mail, subject or message: %w", ErrInvalidValue)
 	}
 
 	if !govalidator.IsEmail(m.From) {
-		return errors.New("from address not valid")
+		return fmt.Errorf("from address: %w", ErrInvalidValue)
 	}
 
 	return nil
