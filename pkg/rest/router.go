@@ -3,7 +3,7 @@ package rest
 import (
 	"net/http"
 
-	abmiddleware "github.com/acim/arc/pkg/middleware"
+	arcmw "github.com/acim/arc/pkg/middleware"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
@@ -17,21 +17,21 @@ func DefaultRouter(serviceName string, allowedOrigins []string, logger *zap.Logg
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Heartbeat("/health"))
-	r.Use(abmiddleware.ZapLogger(logger))
-	r.Use(abmiddleware.PromMetrics(serviceName, nil))
+	r.Use(arcmw.ZapLogger(logger))
+	r.Use(arcmw.PromMetrics(serviceName, nil))
 
 	if len(allowedOrigins) > 0 {
 		r.Use(getCORS(allowedOrigins).Handler)
 	}
 	// r.Use(middleware.DefaultCompress) compress will be done by ingress
-	r.Use(abmiddleware.RenderJSON)
+	r.Use(arcmw.RenderJSON)
 	r.Use(middleware.Recoverer)
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
-		res := abmiddleware.ResponseFromContext(r.Context())
+		res := arcmw.ResponseFromContext(r.Context())
 		res.SetStatusNotFound(http.StatusText(http.StatusNotFound))
 	})
 	r.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {
-		res := abmiddleware.ResponseFromContext(r.Context())
+		res := arcmw.ResponseFromContext(r.Context())
 		res.SetStatus(http.StatusMethodNotAllowed).AddError(http.StatusText(http.StatusMethodNotAllowed))
 	})
 

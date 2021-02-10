@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	abmiddleware "github.com/acim/arc/pkg/middleware"
+	arcmw "github.com/acim/arc/pkg/middleware"
 	"github.com/acim/arc/pkg/store"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-chi/chi/middleware"
@@ -50,7 +50,7 @@ func NewAuth(users store.Users, jwtauth *jwtauth.JWTAuth, logger *zap.Logger, op
 
 // Login handles /auth/login endpoint.
 func (c *Auth) Login(w http.ResponseWriter, r *http.Request) {
-	res := abmiddleware.ResponseFromContext(r.Context())
+	res := arcmw.ResponseFromContext(r.Context())
 
 	l := &login{}
 
@@ -103,7 +103,7 @@ func (c *Auth) Login(w http.ResponseWriter, r *http.Request) {
 
 // User handles /auth/user endpoint.
 func (c *Auth) User(w http.ResponseWriter, r *http.Request) {
-	res := abmiddleware.ResponseFromContext(r.Context())
+	res := arcmw.ResponseFromContext(r.Context())
 
 	userID, err := getUserID(r.Context())
 	if err != nil {
@@ -127,7 +127,7 @@ func (c *Auth) User(w http.ResponseWriter, r *http.Request) {
 
 // Logout handles /auth/logout endpoint.
 func (c *Auth) Logout(w http.ResponseWriter, r *http.Request) {
-	res := abmiddleware.ResponseFromContext(r.Context())
+	res := arcmw.ResponseFromContext(r.Context())
 
 	userID, err := getUserID(r.Context())
 	if err != nil {
