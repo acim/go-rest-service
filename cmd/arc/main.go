@@ -14,8 +14,14 @@ import (
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/mailgun/mailgun-go/v4"
 	"go.ectobit.com/act"
-	"go.uber.org/zap"
 )
+
+type dbConfig struct {
+	Hostname string `def:"postgres"`
+	Username string `def:"postgres"`
+	Password string
+	Name     string `def:"postgres"`
+}
 
 type config struct {
 	ServiceName string `def:"arc"`
@@ -24,24 +30,23 @@ type config struct {
 	Environment string `def:"dev"`
 	JWT         struct {
 		Secret                 string
-		AuthTokenExpiration    time.Duration `env:"JWT_AUTH_TOKEN_EXP" def:"15m"`
-		RefreshTokenExpiration time.Duration `env:"JWT_REFRESH_TOKEN_EXP" def:"168h"`
+		AuthTokenExpiration    time.Duration `env:"ARC_JWT_AUTH_TOKEN_EXP" def:"15m"`
+		RefreshTokenExpiration time.Duration `env:"ARC_JWT_REFRESH_TOKEN_EXP" def:"168h"`
 	}
-	Database struct {
-		Hostname string `env:"DB_HOST" def:"postgres"`
-		Username string `env:"DB_USER" def:"postgres"`
-		Password string `env:"DB_PASS"`
-		Name     string `env:"DB_NAME" defa:"postgres"`
-	}
+	DB      dbConfig
 	Mailgun struct {
-		Domain    string `env:"MG_DOMAIN"`
-		APIKey    string `env:"MG_API_KEY"`
-		Recipient string `env:"MG_EMAIL_TO"`
+		Domain    string
+		APIKey    string
+		Recipient string
 	}
 }
 
 func main() { //nolint:funlen
 	c := &config{}
+
+	if len(os.Args) < 2 { //nolint:gomnd
+		usage()
+	}
 
 	cmd := os.Args[1]
 	switch cmd {
@@ -57,9 +62,9 @@ func main() { //nolint:funlen
 			exit("logger", err)
 		}
 
-		db, err := pgstore.NewDB(c.Database.Hostname, c.Database.Username, c.Database.Password, c.Database.Name)
+		db, err := pgstore.NewDB(c.DB.Hostname, c.DB.Username, c.DB.Password, c.DB.Name)
 		if err != nil {
-			logger.Error("pg connect", zap.Error(err))
+			exit("connect to postgres", err)
 		}
 
 		users := pgstore.NewUsers(db, pgstore.UsersTableName("admin"))

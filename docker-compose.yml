@@ -24,7 +24,7 @@ services:
       - postgres
     environment:
       - RACE_DETECTOR=1
-      - JWT_SECRET=emUhG5q10P3aRWEu5k3LCiQPcVD6VZ2zTvNFm4BrWfTC0gzZF1nXDC3ts21j50V
+      - ARC_JWT_SECRET=emUhG5q10P3aRWEu5k3LCiQPcVD6VZ2zTvNFm4BrWfTC0gzZF1nXDC3ts21j50V
       - MG_DOMAIN
       - MG_API_KEY
     volumes:
