@@ -1,5 +1,10 @@
 # Go skeleton application for REST server with additional metrics endpoint
 
+![check](https://github.com/acim/go-rest-server/workflows/check/badge.svg)
+[![Go Reference](https://pkg.go.dev/badge/github.com/acim/go-rest-server.svg)](https://pkg.go.dev/github.com/acim/go-rest-server)
+[![Go Report](https://goreportcard.com/badge/github.com/acim/go-rest-server)](https://goreportcard.com/report/github.com/acim/go-rest-server)
+[![License](https://img.shields.io/github/license/acim/go-rest-server)](LICENSE)
+
 You can run the server by typing **docker-compose up --build**.
 
 Check [main.go](https://github.com/acim/go-rest-server/blob/master/main.go) for example usage.
