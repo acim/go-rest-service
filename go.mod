@@ -5,19 +5,23 @@ go 1.15
 require (
 	github.com/alecthomas/units v0.0.0-20210208195552-ff826a37aa15 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20200817114649-df4adffc9d8c
+	github.com/cockroachdb/apd v1.1.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/cors v1.1.1
 	github.com/go-chi/jwtauth v4.0.4+incompatible
 	github.com/go-chi/valve v0.0.0-20170920024740-9e45288364f4
+	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/google/uuid v1.2.0
+	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
+	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/jmoiron/sqlx v1.3.1
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/lib/pq v1.9.0
-	github.com/mailgun/mailgun-go/v3 v3.6.4
-	github.com/mailru/easyjson v0.7.7 // indirect
+	github.com/lib/pq v1.9.0 // indirect
+	github.com/mailgun/mailgun-go/v4 v4.3.3
 	github.com/prometheus/client_golang v1.9.0
 	github.com/prometheus/procfs v0.5.0 // indirect
+	github.com/shopspring/decimal v1.2.0 // indirect
 	github.com/stretchr/testify v1.6.1 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0

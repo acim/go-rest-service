@@ -3,7 +3,7 @@ package mail
 import (
 	"context"
 
-	"github.com/mailgun/mailgun-go/v3"
+	"github.com/mailgun/mailgun-go/v4"
 )
 
 var _ Sender = (*Mailgun)(nil)

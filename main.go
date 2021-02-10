@@ -12,9 +12,9 @@ import (
 	"github.com/acim/go-rest-server/pkg/store/pgstore"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/jwtauth"
+	_ "github.com/jackc/pgx/stdlib"
 	"github.com/kelseyhightower/envconfig"
-	_ "github.com/lib/pq"
-	"github.com/mailgun/mailgun-go/v3"
+	"github.com/mailgun/mailgun-go/v4"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
