@@ -1,19 +1,19 @@
 ---
-version: "3.7"
+version: '3.9'
 
 services:
   postgres:
     container_name: go-rest-server-postgres
-    image: postgres:11-alpine
+    image: postgres:12-alpine
     restart: always
     volumes:
-    - postgres:/var/lib/postgresql/data
-    - .docker:/docker-entrypoint-initdb.d
-    environment:
-      POSTGRES_PASSWORD: secret
+      - postgres:/var/lib/postgresql/data
+      - .docker:/docker-entrypoint-initdb.d
   adminer:
     container_name: go-rest-server-adminer
     image: adminer
+    depends_on:
+      - postgres
     restart: always
     ports:
       - 8080:8080
@@ -21,13 +21,9 @@ services:
     container_name: go-rest-server-app
     image: acim/go-reflex
     depends_on:
-    - postgres
+      - postgres
     environment:
       - RACE_DETECTOR=1
-      - DB_HOST=go-rest-server-postgres
-      - DB_USER=postgres
-      - DB_PASS=secret
-      - DB_NAME=postgres
       - JWT_SECRET=emUhG5q10P3aRWEu5k3LCiQPcVD6VZ2zTvNFm4BrWfTC0gzZF1nXDC3ts21j50V
       - MG_DOMAIN
       - MG_API_KEY
