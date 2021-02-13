@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"time"
 
@@ -51,7 +51,7 @@ func main() { //nolint:funlen
 	cmd := os.Args[1]
 	switch cmd {
 	case "serve":
-		serveCmd := act.New("serve")
+		serveCmd := act.New("serve", act.WithUsage("arc"))
 
 		if err := serveCmd.Parse(c, os.Args[2:]); err != nil {
 			exit("parse arguments", err)
@@ -110,7 +110,7 @@ func main() { //nolint:funlen
 
 	case "user":
 		config := &struct{}{}
-		userCmd := act.New("user")
+		userCmd := act.New("user", act.WithUsage("arc"))
 
 		if err := userCmd.Parse(config, os.Args[2:]); err != nil {
 			exit("parse arguments", err)
@@ -148,11 +148,11 @@ func usage() {
     serve	start rest server
     user	create new user`
 
-	log.Println(usage)
-	os.Exit(2) //nolint:gomnd
+	fmt.Println(usage) //nolint:forbidigo
+	os.Exit(2)         //nolint:gomnd
 }
 
 func exit(message string, err error) {
-	log.Printf("%s: %v\n", message, err)
-	os.Exit(2) //nolint:gomnd
+	fmt.Printf("%s: %v\n", message, err) //nolint:forbidigo
+	os.Exit(2)                           //nolint:gomnd
 }
