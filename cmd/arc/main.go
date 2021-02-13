@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -148,11 +148,11 @@ func usage() {
     serve	start rest server
     user	create new user`
 
-	fmt.Println(usage) //nolint:forbidigo
-	os.Exit(2)         //nolint:gomnd
+	log.Println(usage)
+	os.Exit(2) //nolint:gomnd
 }
 
 func exit(message string, err error) {
-	fmt.Printf("%s: %v\n", message, err) //nolint:forbidigo
-	os.Exit(2)                           //nolint:gomnd
+	log.Printf("%s: %v\n", message, err)
+	os.Exit(2) //nolint:gomnd
 }
