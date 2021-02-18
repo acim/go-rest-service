@@ -42,7 +42,7 @@ type config struct {
 }
 
 func main() { //nolint:funlen
-	c := &config{}
+	c := &config{} //nolint:exhaustivestruct
 
 	if len(os.Args) < 2 { //nolint:gomnd
 		usage()

@@ -155,7 +155,7 @@ func RenderJSON(next http.Handler) http.Handler {
 }
 
 func newResponse() *Response {
-	return &Response{
+	return &Response{ //nolint:exhaustivestruct
 		headers: make(http.Header, 1),
 	}
 }

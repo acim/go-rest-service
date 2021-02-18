@@ -26,7 +26,7 @@ type Server struct {
 
 // NewServer creates new server.
 func NewServer(serviceName string, serverPort, metricsPort int, router *chi.Mux, logger *zap.Logger) *Server {
-	s := &Server{
+	s := &Server{ //nolint:exhaustivestruct
 		serviceName: serviceName,
 		router:      router,
 		valve:       valve.New(),

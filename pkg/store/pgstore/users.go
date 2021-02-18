@@ -25,7 +25,7 @@ type Users struct {
 
 // NewUsers creates new users store.
 func NewUsers(db *sqlx.DB, opts ...UsersOption) *Users {
-	u := &Users{
+	u := &Users{ //nolint:exhaustivestruct
 		db:        db,
 		tableName: "user",
 	}
@@ -51,7 +51,7 @@ func (s *Users) FindByID(ctx context.Context, id string) (*model.User, error) {
 		}
 	}
 
-	u := &model.User{}
+	u := &model.User{} //nolint:exhaustivestruct
 	err = s.prepFindByID.QueryRowxContext(ctx, map[string]interface{}{"id": id}).StructScan(u)
 
 	if errors.Is(err, sql.ErrNoRows) {
@@ -79,7 +79,7 @@ func (s *Users) FindByEmail(ctx context.Context, email string) (*model.User, err
 		}
 	}
 
-	u := &model.User{}
+	u := &model.User{} //nolint:exhaustivestruct
 	err = s.prepFindByEmail.QueryRowxContext(ctx, map[string]interface{}{"email": email}).StructScan(u)
 
 	if errors.Is(err, sql.ErrNoRows) {

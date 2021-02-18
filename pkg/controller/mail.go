@@ -36,7 +36,7 @@ func NewMail(sender mail.Sender, recipient string, logger *zap.Logger) *Mail {
 func (c *Mail) Send(w http.ResponseWriter, r *http.Request) {
 	res := middleware.ResponseFromContext(r.Context())
 
-	mr := &mailReq{}
+	mr := &mailReq{} //nolint:exhaustivestruct
 
 	err := json.NewDecoder(r.Body).Decode(mr)
 	if err != nil {

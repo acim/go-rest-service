@@ -52,7 +52,7 @@ func NewAuth(users store.Users, jwtauth *jwtauth.JWTAuth, logger *zap.Logger, op
 func (c *Auth) Login(w http.ResponseWriter, r *http.Request) {
 	res := arcmw.ResponseFromContext(r.Context())
 
-	l := &login{}
+	l := &login{} //nolint:exhaustivestruct
 
 	err := json.NewDecoder(r.Body).Decode(l)
 	if err != nil {
