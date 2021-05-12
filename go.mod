@@ -17,8 +17,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.1
 	github.com/lib/pq v1.9.0 // indirect
 	github.com/mailgun/mailgun-go/v4 v4.4.0
-	github.com/prometheus/client_golang v1.9.0
-	github.com/prometheus/procfs v0.5.0 // indirect
+	github.com/prometheus/client_golang v1.10.0
 	github.com/shopspring/decimal v1.2.0 // indirect
 	github.com/stretchr/testify v1.6.1 // indirect
 	go.ectobit.com/act v0.2.0
@@ -26,7 +25,6 @@ require (
 	go.uber.org/zap v1.16.0
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
 	golang.org/x/mod v0.4.1 // indirect
-	golang.org/x/sys v0.0.0-20210124154548-22da62e12c0c // indirect
 	golang.org/x/tools v0.0.0-20210114065538-d78b04bdf963 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
 )
