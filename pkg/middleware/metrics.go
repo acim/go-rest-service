@@ -25,7 +25,7 @@ func PromMetrics(serviceName string, buckets []float64) func(next http.Handler) 
 	prometheus.MustRegister(requests)
 
 	duration := prometheus.NewHistogramVec(prometheus.HistogramOpts{ //nolint:exhaustivestruct
-		Name:        "request_duration_milliseconds",
+		Name:        "request_duration_seconds",
 		Help:        "Duration of requests completion partitioned by status code, method and URI.",
 		ConstLabels: prometheus.Labels{"service": serviceName},
 		Buckets:     buckets,
@@ -41,7 +41,7 @@ func PromMetrics(serviceName string, buckets []float64) func(next http.Handler) 
 			defer func() {
 				requests.WithLabelValues(http.StatusText(ww.Status()), r.Method, r.RequestURI).Inc()
 				duration.WithLabelValues(http.StatusText(ww.Status()), r.Method, r.RequestURI).
-					Observe(float64(time.Since(start).Nanoseconds()) / 1000000) //nolint:gomnd
+					Observe(time.Since(start).Seconds()) //nolint:gomnd
 			}()
 			next.ServeHTTP(ww, r)
 		})
