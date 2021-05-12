@@ -7,7 +7,7 @@ require (
 	github.com/cockroachdb/apd v1.1.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-chi/chi v4.1.2+incompatible
-	github.com/go-chi/cors v1.1.1
+	github.com/go-chi/cors v1.2.0
 	github.com/go-chi/jwtauth v4.0.4+incompatible
 	github.com/go-chi/valve v0.0.0-20170920024740-9e45288364f4
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
