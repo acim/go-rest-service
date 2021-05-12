@@ -14,7 +14,7 @@ require (
 	github.com/google/uuid v1.2.0
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgx v3.6.2+incompatible
-	github.com/jmoiron/sqlx v1.3.1
+	github.com/jmoiron/sqlx v1.3.3
 	github.com/lib/pq v1.9.0 // indirect
 	github.com/mailgun/mailgun-go/v4 v4.4.0
 	github.com/prometheus/client_golang v1.10.0
