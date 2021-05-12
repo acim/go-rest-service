@@ -16,7 +16,7 @@ require (
 	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/jmoiron/sqlx v1.3.1
 	github.com/lib/pq v1.9.0 // indirect
-	github.com/mailgun/mailgun-go/v4 v4.4.0
+	github.com/mailgun/mailgun-go/v4 v4.5.1
 	github.com/prometheus/client_golang v1.10.0
 	github.com/shopspring/decimal v1.2.0 // indirect
 	github.com/stretchr/testify v1.6.1 // indirect
