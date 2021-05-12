@@ -41,7 +41,7 @@ func PromMetrics(serviceName string, buckets []float64) func(next http.Handler) 
 			defer func() {
 				requests.WithLabelValues(http.StatusText(ww.Status()), r.Method, r.RequestURI).Inc()
 				duration.WithLabelValues(http.StatusText(ww.Status()), r.Method, r.RequestURI).
-					Observe(time.Since(start).Seconds()) //nolint:gomnd
+					Observe(time.Since(start).Seconds())
 			}()
 			next.ServeHTTP(ww, r)
 		})
