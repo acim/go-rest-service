@@ -18,7 +18,7 @@ type Response struct {
 
 // ResponseFromContext returns response from context.
 func ResponseFromContext(ctx context.Context) *Response {
-	response := ctx.Value(responseKey{}).(*Response)
+	response := ctx.Value(responseKey{}).(*Response) //nolint:forcetypeassert
 
 	return response
 }
