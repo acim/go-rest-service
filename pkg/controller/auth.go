@@ -197,5 +197,5 @@ type login struct {
 
 type token struct {
 	AuthToken    string `json:"token,omitempty"`
-	RefreshToken string `json:"refresh_token,omitempty"`
+	RefreshToken string `json:"refreshToken,omitempty"`
 }
