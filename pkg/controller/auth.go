@@ -142,9 +142,9 @@ func (c *Auth) Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Auth) token(expiration time.Duration, requestID, userID string) (string, error) {
-	_, token, err := c.jwtauth.Encode(jwt.StandardClaims{ //nolint:exhaustivestruct
-		ExpiresAt: time.Now().Add(expiration).Unix(),
-		Id:        requestID,
+	_, token, err := c.jwtauth.Encode(jwt.RegisteredClaims{ //nolint:exhaustivestruct
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(expiration)),
+		ID:        requestID,
 		Subject:   userID,
 	})
 	if err != nil {
