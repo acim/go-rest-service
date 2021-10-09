@@ -3,7 +3,7 @@ module github.com/acim/arc
 go 1.17
 
 require (
-	github.com/asaskevich/govalidator v0.0.0-20200817114649-df4adffc9d8c
+	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/cors v1.2.0
 	github.com/go-chi/jwtauth v4.0.4+incompatible
@@ -12,11 +12,11 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/jmoiron/sqlx v1.3.4
-	github.com/mailgun/mailgun-go/v4 v4.5.2
+	github.com/mailgun/mailgun-go/v4 v4.5.3
 	github.com/prometheus/client_golang v1.11.0
 	go.ectobit.com/act v0.2.1
-	go.uber.org/zap v1.18.1
-	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
+	go.uber.org/zap v1.19.1
+	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 )
 
 require (
@@ -40,7 +40,7 @@ require (
 	github.com/shopspring/decimal v1.2.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	golang.org/x/sys v0.0.0-20210603081109-ebe580a85c40 // indirect
-	golang.org/x/text v0.3.2 // indirect
+	golang.org/x/sys v0.0.0-20210615035016-665e8c7367d1 // indirect
+	golang.org/x/text v0.3.3 // indirect
 	google.golang.org/protobuf v1.26.0-rc.1 // indirect
 )
