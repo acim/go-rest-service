@@ -10,7 +10,7 @@ import (
 
 	arcmw "github.com/acim/arc/pkg/middleware"
 	"github.com/acim/arc/pkg/store"
-	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/jwtauth/v5"
 	"github.com/golang-jwt/jwt"
 	"go.uber.org/zap"

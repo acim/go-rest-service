@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	arcmw "github.com/acim/arc/pkg/middleware"
-	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"go.uber.org/zap"
 )
