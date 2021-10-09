@@ -15,7 +15,7 @@ require (
 	github.com/mailgun/mailgun-go/v4 v4.5.2
 	github.com/prometheus/client_golang v1.11.0
 	go.ectobit.com/act v0.2.1
-	go.uber.org/zap v1.18.1
+	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
 )
 
@@ -41,6 +41,6 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/sys v0.0.0-20210603081109-ebe580a85c40 // indirect
-	golang.org/x/text v0.3.2 // indirect
+	golang.org/x/text v0.3.3 // indirect
 	google.golang.org/protobuf v1.26.0-rc.1 // indirect
 )
