@@ -12,7 +12,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/jmoiron/sqlx v1.3.4
-	github.com/mailgun/mailgun-go/v4 v4.5.2
+	github.com/mailgun/mailgun-go/v4 v4.5.3
 	github.com/prometheus/client_golang v1.11.0
 	go.ectobit.com/act v0.2.1
 	go.uber.org/zap v1.18.1
