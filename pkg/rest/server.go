@@ -2,13 +2,14 @@ package rest
 
 import (
 	"context"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
 	"strconv"
 	"time"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/valve"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
@@ -33,8 +34,10 @@ func NewServer(serviceName string, serverPort, metricsPort int, router *chi.Mux,
 		logger:      logger,
 	}
 	s.server = &http.Server{ //nolint:exhaustivestruct
-		Addr:    ":" + strconv.Itoa(serverPort),
-		Handler: chi.ServerBaseContext(s.valve.Context(), s.router),
+		Addr: ":" + strconv.Itoa(serverPort),
+		BaseContext: func(net.Listener) context.Context {
+			return s.valve.Context()
+		},
 	}
 	s.metricsServer = &http.Server{Addr: ":" + strconv.Itoa(metricsPort), Handler: promhttp.Handler()} //nolint:exhaustivestruct,lll
 

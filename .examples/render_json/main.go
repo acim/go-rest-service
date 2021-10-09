@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/acim/arc/pkg/middleware"
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {

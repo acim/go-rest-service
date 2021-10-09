@@ -11,8 +11,8 @@ import (
 	arcmw "github.com/acim/arc/pkg/middleware"
 	"github.com/acim/arc/pkg/store"
 	"github.com/go-chi/chi/middleware"
-	"github.com/go-chi/jwtauth"
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/go-chi/jwtauth/v5"
+	"github.com/golang-jwt/jwt"
 	"go.uber.org/zap"
 )
 
@@ -142,10 +142,11 @@ func (c *Auth) Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Auth) token(expiration time.Duration, requestID, userID string) (string, error) {
-	_, token, err := c.jwtauth.Encode(jwt.RegisteredClaims{ //nolint:exhaustivestruct
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(expiration)),
-		ID:        requestID,
-		Subject:   userID,
+	_, token, err := c.jwtauth.Encode(jwt.MapClaims{
+		"exp": time.Now().Add(expiration).Unix(),
+		"iat": time.Now().Unix(),
+		"jti": requestID,
+		"sub": userID,
 	})
 	if err != nil {
 		return "", fmt.Errorf("encode token: %w", err)
