@@ -6,9 +6,9 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-s -w" -o /go/bin/arc
+RUN CGO_ENABLED=0 go build -a -installsuffix cgo -ldflags="-s -w" -o /go/bin/arc ./cmd/arc/.
 
-FROM alpine
+FROM alpine:3.14.2
 
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=builder /go/bin/arc /usr/bin/arc
