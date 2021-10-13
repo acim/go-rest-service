@@ -33,3 +33,7 @@ jobs:
       - name: Build
         run: |
           go build ./cmd/arc
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v1.5.0
+        with:
+          dockerfile: Dockerfile
