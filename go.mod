@@ -12,7 +12,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/jmoiron/sqlx v1.3.4
-	github.com/mailgun/mailgun-go/v4 v4.5.3
+	github.com/mailgun/mailgun-go/v4 v4.6.0
 	github.com/prometheus/client_golang v1.11.0
 	go.ectobit.com/act v0.2.1
 	go.uber.org/zap v1.19.1
@@ -26,7 +26,6 @@ require (
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.0-20210816181553-5444fa50b93d // indirect
 	github.com/goccy/go-json v0.7.6 // indirect
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
-	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/iancoleman/strcase v0.2.0 // indirect
