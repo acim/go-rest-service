@@ -1,3 +1,4 @@
+// Package controller contains http handlers.
 package controller
 
 const (

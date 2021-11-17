@@ -1,3 +1,4 @@
+// Package store contains store abstraction.
 package store
 
 import (

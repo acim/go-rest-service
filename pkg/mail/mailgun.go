@@ -1,3 +1,4 @@
+// Package mail contains mail services implementations.
 package mail
 
 import (

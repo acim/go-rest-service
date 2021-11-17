@@ -1,8 +1,12 @@
 .PHONY: lint test test-verbose test-with-coverage
 
 lint:
-	@go vet ./...
-	@golangci-lint run --enable-all --disable varnamelen
+	@golangci-lint run --exclude-use-default=false --enable-all \
+		--disable golint \
+		--disable interfacer \
+		--disable scopelint \
+		--disable maligned \
+		--disable varnamelen
 
 test:
 	@go test ./...
